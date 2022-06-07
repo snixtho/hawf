@@ -30,3 +30,4 @@ This is only a very basic example of how it works. The framework provides variou
 - Supports automatic JSON serialization.
 - Handles authentication and authorization of your endpoints.
 - Can handle rate limits on APIs
+- Based on the Task Asynchronous Programming (TAP) technique.
