@@ -26,7 +26,7 @@ Console.WriteLine(response);
 This is only a very basic example of how it works. The framework provides various convenient methods and tools to quickly create a complete client for your API.
 
 # Features
-- Quickly define your API endpoints into client code with a builder API.
+- Quickly define your API endpoints into client code with a rich builder API.
 - Supports automatic JSON serialization.
 - Handles authentication and authorization of your endpoints.
 - Can handle rate limits on APIs
