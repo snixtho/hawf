@@ -18,7 +18,7 @@ You can then instantiate the class and call the api endpoint:
 ```csharp
 var api = new MyApi();
 
-var response = api.MyApiCallAsync();
+var response = await api.MyApiCallAsync();
 
 Console.WriteLine(response);
 ```
