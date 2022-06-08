@@ -112,7 +112,10 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
             if (propertyOptions is {IntegerEnum: true})
                 value = Convert.ToInt32(objValue);
             else if (typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
-                value = string.Join(propertyOptions.ListSeparator, objValue);
+            {
+                var objStrMapped = ((object[]) objValue).Select(e => e.ToString());
+                value = string.Join(propertyOptions.ListSeparator, objStrMapped);
+            }
             else
                 value = objValue;
 
