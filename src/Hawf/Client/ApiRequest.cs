@@ -12,4 +12,6 @@ public class ApiRequest
     public Uri BaseUrl { get; set; }
     public CancellationToken CancelToken { get; set; }
     public bool KeepAlive { get; set; } = true;
+    public bool CacheResponse { get; set; } = false;
+    public TimeSpan? CacheTime { get; set; }
 }

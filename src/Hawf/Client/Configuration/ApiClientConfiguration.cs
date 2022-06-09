@@ -36,4 +36,12 @@ public class ApiClientConfiguration
     /// Throw an error by default if the http server returns a non 200 status code.
     /// </summary>
     public bool DefaultThrowOnFail { get; set; } = true;
+    /// <summary>
+    /// Whether to always cache responses.
+    /// </summary>
+    public bool CacheResponse { get; set; } = false;
+    /// <summary>
+    /// The default time span to keep a cache of responses.
+    /// </summary>
+    public TimeSpan DefaultCacheTime { get; set; } = TimeSpan.FromMinutes(1);
 }

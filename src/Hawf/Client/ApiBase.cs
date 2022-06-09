@@ -18,6 +18,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     private HttpClient _client;
     private int _requestCounter;
     private DateTime _requestCounterReset;
+    private ApiMemoryCache _cache;
 
     public ApiBase() => Init();
     public ApiBase(HttpMessageHandler handler) => Init(handler);
@@ -29,6 +30,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
             handler = new HttpClientHandler();
 
         _client = new HttpClient(handler);
+        _cache = new ApiMemoryCache();
         
         // client info
         var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
@@ -37,6 +39,36 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
         _clientConfig = attrInfo.ClientConfig;
 
         _requestCounter = -1;
+    }
+
+    private async Task TryPreventRateLimit(CancellationToken cancelToken)
+    {
+        if (_clientConfig.UseRateLimit)
+        {
+            if (_requestCounter < 0)
+            {
+                // first request
+                _requestCounter = 0;
+                _requestCounterReset = DateTime.Now;
+            }
+
+            if (_requestCounter >= _clientConfig.RateLimitMaxRequests)
+            {
+                var epoch = DateTime.Now - _requestCounterReset;
+
+                if (epoch <= _clientConfig.RateLimitTimespan)
+                {
+                    var timeLeft = _clientConfig.RateLimitTimespan - epoch;
+                    if (_clientConfig.WaitForRateLimit)
+                        await Task.Delay(timeLeft.Milliseconds, cancelToken);
+                    else
+                        throw new RateLimitExceededException(timeLeft);
+                }
+
+                _requestCounter = 0;
+                _requestCounterReset = DateTime.Now;
+            }
+        }
     }
     
     /// <summary>
@@ -47,45 +79,41 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     /// <returns></returns>
     /// <exception cref="RateLimitExceededException"></exception>
     /// <exception cref="Exception"></exception>
-    private async Task<HttpResponseMessage> SendRequestAsync(ApiRequest request, CancellationToken cancelToken = default)
+    private async Task<HttpResponseMessage> SendRequestAsync(ApiRequest request, CancellationToken cancelToken)
     {
         try
         {
-            // prevent rate limit
-            if (_clientConfig.UseRateLimit)
-            {
-                if (_requestCounter < 0)
-                {
-                    // first request
-                    _requestCounter = 0;
-                    _requestCounterReset = DateTime.Now;
-                }
-
-                if (_requestCounter >= _clientConfig.RateLimitMaxRequests)
-                {
-                    var epoch = DateTime.Now - _requestCounterReset;
-
-                    if (epoch <= _clientConfig.RateLimitTimespan)
-                    {
-                        var timeLeft = _clientConfig.RateLimitTimespan - epoch;
-                        if (_clientConfig.WaitForRateLimit)
-                            await Task.Delay(timeLeft.Milliseconds, cancelToken);
-                        else
-                            throw new RateLimitExceededException(timeLeft);
-                    }
-
-                    _requestCounter = 0;
-                    _requestCounterReset = DateTime.Now;
-                }
-            }
-            
+            // build request
             if (!request.Headers.ContainsKey(HttpHeader.UserAgent))
                 WithUserAgent(_clientConfig.DefaultUserAgent);
 
             WithBaseUrl(_clientConfig.BaseUrl);
 
             var httpRequest = request.BuildRequest();
+            
+            // return cached object if enabled and available
+            var cacheKey = httpRequest.RequestUri.AbsoluteUri;
+            var cacheResponse = request.CacheResponse || _clientConfig.CacheResponse;
+            if (cacheResponse)
+            {
+                HttpResponseMessage? cachedResponse = null;
+                
+                if (await _cache.Exists(cacheKey))
+                    cachedResponse = await _cache.Get<HttpResponseMessage>(cacheKey);
+
+                if (cachedResponse != null)
+                    return cachedResponse;
+            }
+            
+            // prevent rate limit
+            await TryPreventRateLimit(cancelToken);
+
+            // send the request and get response
             var response = await _client.SendAsync(httpRequest, cancelToken);
+
+            // cache the response if enabled
+            if (cacheResponse)
+                await _cache.Set(cacheKey, response, request.CacheTime ?? _clientConfig.DefaultCacheTime);
 
             if (_clientConfig.DefaultThrowOnFail && !response.IsSuccessStatusCode)
                 throw new Exception($"Request failed with response: {response.StatusCode}");

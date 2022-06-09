@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Net.Cache;
 using System.Net.Http.Headers;
 using System.Reflection;
 using Hawf.Attributes;
@@ -131,6 +132,23 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         var options = Activator.CreateInstance<TOptions>();
         optionsAction?.Invoke(options);
         WithQueryOptions(options);
+        
+        return (T) this;
+    }
+
+    protected T CacheResponseFor(TimeSpan timeSpan)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.CacheResponse = true;
+        RequestInfo.CacheTime = timeSpan;
+        
+        return (T) this;
+    }
+    
+    protected T CacheResponseFor(int milliseconds)
+    {
+        CacheResponseFor(TimeSpan.FromMilliseconds(milliseconds));
         
         return (T) this;
     }
