@@ -10,7 +10,7 @@ public class ApiClientAttribute : Attribute
 
     public ApiClientAttribute(
         string baseUrl, 
-        string userAgent="", 
+        string userAgent="Hawf", 
         int rateLimitMaxRequests=5, 
         int rateLimitTimespan=60000, 
         bool useRateLimit=false,

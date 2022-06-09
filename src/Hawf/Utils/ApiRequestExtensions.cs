@@ -34,7 +34,10 @@ public static class ApiRequestExtensions
             Query = query
         };
 
-        urlBuilder.Path += path;
+        if (urlBuilder.Path.StartsWith("/"))
+            urlBuilder.Path = urlBuilder.Path.Substring(1) + path;
+        else
+            urlBuilder.Path += path;
 
         var requestMsg = new HttpRequestMessage
         {
