@@ -44,4 +44,8 @@ public class ApiClientConfiguration
     /// The default time span to keep a cache of responses.
     /// </summary>
     public TimeSpan DefaultCacheTime { get; set; } = TimeSpan.FromMinutes(1);
+    /// <summary>
+    /// The HTTP message handler to use in requests.
+    /// </summary>
+    public HttpMessageHandler HttpHandler { get; set; } = new HttpClientHandler();
 }

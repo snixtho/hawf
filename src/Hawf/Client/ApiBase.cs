@@ -21,23 +21,21 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     private ApiMemoryCache _cache;
 
     public ApiBase() => Init();
-    public ApiBase(HttpMessageHandler handler) => Init(handler);
+    public ApiBase(ApiClientConfiguration config) => Init(config);
 
-    private void Init(HttpMessageHandler? handler=null)
+    private void Init(ApiClientConfiguration? config=null)
     {
-        if (handler == null)
-            // default handler
-            handler = new HttpClientHandler();
-
-        _client = new HttpClient(handler);
-        _cache = new ApiMemoryCache();
-        
-        // client info
+        // client config
         var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
         var attrInfo = attr ?? throw new Exception("The API must annotate the ApiClient attribute");
 
-        _clientConfig = attrInfo.ClientConfig;
+        if (config == null)
+            _clientConfig = attrInfo.ClientConfig;
+        else
+            _clientConfig = config;
 
+        _client = new HttpClient(_clientConfig.HttpHandler);
+        _cache = new ApiMemoryCache();
         _requestCounter = -1;
     }
 
