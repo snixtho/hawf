@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 using Hawf.Client;
-using Hawf.Client.Http;
 
 namespace Hawf.Utils;
 
@@ -32,9 +31,10 @@ public static class ApiRequestExtensions
 
         var urlBuilder = new UriBuilder(request.BaseUrl)
         {
-            Path = path,
             Query = query
         };
+
+        urlBuilder.Path += path;
 
         var requestMsg = new HttpRequestMessage
         {
