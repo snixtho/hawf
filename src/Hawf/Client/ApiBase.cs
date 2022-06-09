@@ -5,6 +5,8 @@ using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
 using Hawf.Attributes;
+using Hawf.Client.Configuration;
+using Hawf.Client.Exceptions;
 using Hawf.Client.Http;
 using Hawf.Utils;
 
@@ -12,7 +14,7 @@ namespace Hawf.Client;
 
 public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 {
-    private ApiClientAttribute _apiAttr;
+    private ApiClientConfiguration _clientConfig;
     private HttpClient _client;
     private int _requestCounter;
     private DateTime _requestCounterReset;
@@ -30,17 +32,27 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
         
         // client info
         var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
-        _apiAttr = attr ?? throw new Exception("The API must annotate the ApiClient attribute");
+        var attrInfo = attr ?? throw new Exception("The API must annotate the ApiClient attribute");
+
+        _clientConfig = attrInfo.ClientConfig;
 
         _requestCounter = -1;
     }
     
+    /// <summary>
+    /// Perform a HTTP request.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="cancelToken"></param>
+    /// <returns></returns>
+    /// <exception cref="RateLimitExceededException"></exception>
+    /// <exception cref="Exception"></exception>
     private async Task<HttpResponseMessage> SendRequestAsync(ApiRequest request, CancellationToken cancelToken = default)
     {
         try
         {
             // prevent rate limit
-            if (_apiAttr.UseRatelimit)
+            if (_clientConfig.UseRateLimit)
             {
                 if (_requestCounter < 0)
                 {
@@ -49,34 +61,40 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
                     _requestCounterReset = DateTime.Now;
                 }
 
-                if (_requestCounter >= _apiAttr.DefaultRateLimitMaxRequests)
+                if (_requestCounter >= _clientConfig.RateLimitMaxRequests)
                 {
                     var epoch = DateTime.Now - _requestCounterReset;
-                    
-                    if (epoch <= _apiAttr.DefaultRateLimitTimespan)
-                        await Task.Delay(epoch.Milliseconds);
-                    
+
+                    if (epoch <= _clientConfig.RateLimitTimespan)
+                    {
+                        var timeLeft = _clientConfig.RateLimitTimespan - epoch;
+                        if (_clientConfig.WaitForRateLimit)
+                            await Task.Delay(timeLeft.Milliseconds, cancelToken);
+                        else
+                            throw new RateLimitExceededException(timeLeft);
+                    }
+
                     _requestCounter = 0;
                     _requestCounterReset = DateTime.Now;
                 }
             }
             
             if (!request.Headers.ContainsKey(HttpHeader.UserAgent))
-                WithUserAgent(_apiAttr.DefaultUserAgent);
+                WithUserAgent(_clientConfig.DefaultUserAgent);
 
-            WithBaseUrl(_apiAttr.BaseUrl);
+            WithBaseUrl(_clientConfig.BaseUrl);
 
             var httpRequest = request.BuildRequest();
             var response = await _client.SendAsync(httpRequest, cancelToken);
 
-            if (_apiAttr.ThrowOnFail && !response.IsSuccessStatusCode)
+            if (_clientConfig.DefaultThrowOnFail && !response.IsSuccessStatusCode)
                 throw new Exception($"Request failed with response: {response.StatusCode}");
             
             return response;
         }
         catch (Exception ex)
         {
-            if (_apiAttr.ThrowOnFail)
+            if (_clientConfig.DefaultThrowOnFail)
                 throw;
         }
         finally
@@ -88,9 +106,29 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
         throw new Exception("An unknown error occured.");
     }
 
+    /// <summary>
+    /// Edit the API client's configuration.
+    /// </summary>
+    /// <param name="configAction"></param>
+    public void Configure(Action<ApiClientConfiguration> configAction) => configAction.Invoke(_clientConfig);
+    
+    #region Request Methods
+
+    /// <summary>
+    /// Send a new request based on current config
+    /// and get the response message.
+    /// </summary>
+    /// <param name="cancelToken"></param>
+    /// <returns></returns>
     private async Task<HttpResponseMessage> RequestAsync(CancellationToken cancelToken = default)
         => await SendRequestAsync(RequestInfo, cancelToken);
 
+    /// <summary>
+    /// Send a new request based on current config and return a JSON parsed object.
+    /// </summary>
+    /// <param name="cancelToken"></param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
     private async Task<TReturn?> RequestJsonAsync<TReturn>(CancellationToken cancelToken = default)
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
@@ -241,4 +279,6 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
         WithPath(path).AddPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
+    
+    #endregion
 }

@@ -11,4 +11,5 @@ public class ApiRequest
     public HttpMethod Method { get; set; }
     public Uri BaseUrl { get; set; }
     public CancellationToken CancelToken { get; set; }
+    public bool KeepAlive { get; set; } = true;
 }

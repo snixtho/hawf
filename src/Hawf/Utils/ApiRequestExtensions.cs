@@ -49,6 +49,8 @@ public static class ApiRequestExtensions
                 requestMsg.Headers.Add(key, value);
         }
 
+        requestMsg.Headers.ConnectionClose = !request.KeepAlive;
+
         return requestMsg;
     }
 }
