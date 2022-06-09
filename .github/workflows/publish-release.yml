@@ -33,6 +33,9 @@ jobs:
       - name: Run Tests
         run: dotnet test $SOLUTION /p:Configuration=Release --no-restore --no-build --verbosity normal
       
+      - name: Nuget Pack
+        run: dotnet pack -c Release --no-build --output .
+      
       - name: ZIP Artifacts
         uses: papeloto/action-zip@v1
         with:
