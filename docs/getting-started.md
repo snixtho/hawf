@@ -95,3 +95,5 @@ var user = await api.GetUserAsync("snixtho");
 Console.WriteLine($"snixtho created their account at {user.CreatedAt}, has {user.Followers} follower(s) and made {user.PublicRepos} public repositories.");
 
 ```
+
+You can find the full source code for this tutorial [here](Examples/GettingStartedTutorial).
