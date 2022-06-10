@@ -31,6 +31,7 @@ This is only a very basic example of how it works. The framework provides variou
 - Handles authentication and authorization of your endpoints.
 - Can handle rate limits on APIs
 - Based on the Task Asynchronous Programming (TAP) pattern.
+- Response caching.
 
 # Documentation
 Check out the main documentation [here](docs/).
