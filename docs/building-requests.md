@@ -55,7 +55,7 @@ And you want to call an endpoint that returns this user information. You can cal
 
 ```cs
 // get user with id 1 from API
-User user = await GetJsonAsync<User>("/user/{id}", 1);
+User user = await GetJsonAsync<User>("/users/{id}", 1);
 ```
 
 For an example that uses the JSON methods, check out the tutorial in [Getting Started](getting-started.md#tutorial-create-a-basic-http-api-client).
