@@ -115,3 +115,18 @@ Provide the HTTP method to use in the request with `WithMethod`:
 // example
 WithMethod(HttpMethod.Get)
 ```
+
+### (Optional) WithPath
+Most likely you need to set a path to the API endpoint, however, if this is not needed, you can omit this method.
+```cs
+// example
+WithPath("/users/{id}")
+```
+
+### (Optional) WithPathValues
+If you don't have any path parameters set, this method is optional. However, Keep in mind that the number of path parameters provided must have the same amount of values added.
+```cs
+// example
+WithPathValues(1)
+```
+
