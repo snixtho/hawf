@@ -39,7 +39,7 @@ It requires you to provide a base address, but it also contains some other optio
 - **`throwOnFail`**
 
   If the HTTP server returns a non-success HTTP status code, an exception is raised. *Default: true*
-  
+
 ## The `Configure()` base class method
 
 This method gives you much more control over the internal configuration of the API client. Here you can configure things like caching, the default cancellation token, the HTTP handler itself etc.
@@ -52,3 +52,5 @@ Configure(options => {
   options.CacheResponse = true;
 });
 ```
+
+This method is commonly called within the contructor of the API client class. Here is a list of options it provides:
