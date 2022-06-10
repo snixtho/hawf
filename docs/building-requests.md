@@ -76,7 +76,7 @@ Here are the options provided that controls how it is generated:
 - `integerEnum`: If true, convert an enumeration type to an integer value. *Default: `false`*
 - `listSeparator`: If an array or collection is defined as a query parameter, use this string to separate the items. *Default: `","`*
 
-## Response Caching
+# Response Caching
 You can enable caching of the response for a specific request by using the `CacheResponseFor` method. For example:
 
 ```cs
