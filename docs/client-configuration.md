@@ -34,15 +34,15 @@ It requires you to provide a base address, but it also contains some other optio
 
 - **`useRateLimit`**
 
-  Whether to enable rate limit or not. *Default: false*
+  Whether to enable rate limit or not. *Default: `false`*
 
 - **`throwOnFail`**
 
-  If the HTTP server returns a non-success HTTP status code, an exception is raised. *Default: true*
+  If the HTTP server returns a non-success HTTP status code, an exception is raised. *Default: `true`*
 
 ## The `Configure()` base class method
 
-This method gives you much more control over the internal configuration of the API client. Here you can configure things like caching, the default cancellation token, the HTTP handler itself etc.
+This method gives you much more control over the internal configuration of the API client. Here you can configure things like caching, the default cancellation token, the HTTP handler itself etc. The properties in the `ApiClient` attribute is automatically assigned to this internal configuration object.
 
 The method is provides an Action<ApiClientConfiguration> parameter, which you can pass a lambda expression to configure the internal config object. Example:
 
@@ -54,3 +54,48 @@ Configure(options => {
 ```
 
 This method is commonly called within the contructor of the API client class. Here is a list of options it provides:
+
+- **`BaseUrl`**
+
+  Baseurl all endpoints will be called from.
+
+- **`DefaultUserAgent`**
+
+  The default user agent to send with the HTTP request, unless specified otherwise. *Default: `Hawf`*
+
+- **`RateLimitMaxRequests`**
+
+  Max amount of requests before rate limit kicks in. *Default: `5`*
+
+- **`RateLimitTimespan`**
+
+  Timespan for max amount of requests before rate limit kicks in. *Default: `1 Minute`*
+
+- **`UseRateLimit`**
+
+  Whether to enable rate limit by. *Default: `false`*
+
+- **`WaitForRateLimit`**
+
+  If true, the code blocks and wait for the rate limit time is over. Otherwise it throws an RateLimitExceededException. *Default: `true`*
+
+- **`KeepAlive`**
+
+  Whether to attempt to keep the connection alive. *Default: `true`*
+
+- **`DefaultThrowOnFail`**
+
+  Throw an error by default if the http server returns a non 200 status code. *Default: `true`*
+
+- **`CacheResponse`**
+
+  Whether to always cache responses (See [Response Caching](response-caching.md) for more information) *Default: `false`*
+
+- **`DefaultCacheTime`**
+
+  The default time span to keep a cache of responses (See [Response Caching](response-caching.md) for more information) *Default: `false`*
+
+- **`HttpHandler`**
+
+  The HTTP message handler to use in requests. *Default: `default instance of HttpClientHandler`*
+
