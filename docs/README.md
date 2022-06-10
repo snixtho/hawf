@@ -2,6 +2,7 @@
 
 - [Getting Started](getting-started.md)
 - [Client Configuration](client-configuration.md)
+- [Calling API Endpoints](calling-endpoints.md)
 - [Building API Requests](building-requests.md)
 - [Query Builder](query-builder.md)
 - [Rate Limiting](rate-limiting.md)
