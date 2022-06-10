@@ -5,7 +5,7 @@ Whenever you call one of these methods, the internal state changes, indicating t
 
 The builder methods provides various ways to configure the request itself, which allows you to control exactly how you want the request to be done.
 
-# Setting HTTP Headers
+## Setting HTTP Headers
 You can set HTTP headers with the `WithHeader` method. For example:
 
 ```cs
@@ -19,14 +19,14 @@ If a value passed to one of these methods are null. The header will not be set. 
 
 Some convenience methods are also provided for the `WithHeader` method as well.
 
-## User Agent
+### User Agent
 The user agent can be easily set with its own method. For example:
 
 ```cs
 WithUserAgent("My user Agent");
 ```
 
-# Query Parameters
+## Query Parameters
 The query parameters at the end of an URL can be set using the `WithQueryParam` method. This method adds the query parameters to an internal dictionary, and is automatically generated when the request action is performed. Values will be URL encoded automatically so you don't have to worry about this.
 
 It is always recommended to use this method everytime you need to add an URL query value and keep the path in the request action method clean.
@@ -37,10 +37,10 @@ WithQueryParam("name", "value)
 .WithQueryParam("intParam", 12345); // auto converted to string
 ```
 
-## The `WithQueryOptions` method
+### The `WithQueryOptions` method
 There is actually another and more advanced way of providing query parameters to the URL. The `WithQueryOptions` provides a declerative way of defining URL parameters in a class, and then configure them through a lambda expression. This is very convenient if you have alot of query parameters or needs some more advanced parsing and value conversions.
 
-### `QueryProperty` Attribute
+#### `QueryProperty` Attribute
 The `QueryProperty` allows you to control how a query parameter is generated.
 
 Imagine you have the following class, which defines a query parameter:
@@ -76,7 +76,7 @@ Here are the options provided that controls how it is generated:
 - `integerEnum`: If true, convert an enumeration type to an integer value. *Default: `false`*
 - `listSeparator`: If an array or collection is defined as a query parameter, use this string to separate the items. *Default: `","`*
 
-# Response Caching
+## Response Caching
 You can enable caching of the response for a specific request by using the `CacheResponseFor` method. For example:
 
 ```cs
@@ -84,3 +84,34 @@ CacheResponseFor(TimeSpan.FromSeconds(10))
 ```
 
 For more information about response caching check out the [Response Caching](response-caching.md) pages.
+
+## Cancellation token
+You can provide the user with a cancellation token that they use in their programs and can be used to stop current requests if needed. The method `WithCancelToken` is provided for this:
+```cs
+WithCancelToken(myCancellationToken)
+```
+
+## Manually Building the full requests
+The methods above doesn't build the full requests. In fact, there are more methods available, but they are automatically called whenever you perform a request. It is possible, however, if you for some reason need the extra control, to use the main request methods. These methods require you to set things like the path, base URL, path values and the HTTP method before calling.
+
+Here is a list of the main request methods available, they will perform the actual request and respond with a the response format chosen:
+- `RequestStringAsync(CancellationToken cancelToken = default)`
+- `RequestStreamAsync(CancellationToken cancelToken = default)`
+- `RequestBytesAsync(CancellationToken cancelToken = default)`
+- `GetJsonAsync<TReturn>(CancellationToken cancelToken = default)`
+
+Before calling any of these methods, you need to set the following properties:
+
+### Base URL
+The base URL can be set with the `WithBaseUrl` method:
+```cs
+// example
+WithBaseUrl("https://api.my-website.com")
+```
+
+### HTTP Method
+Provide the HTTP method to use in the request with `WithMethod`:
+```cs
+// example
+WithMethod(HttpMethod.Get)
+```

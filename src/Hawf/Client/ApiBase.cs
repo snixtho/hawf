@@ -85,7 +85,8 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
             if (!request.Headers.ContainsKey(HttpHeader.UserAgent))
                 WithUserAgent(_clientConfig.DefaultUserAgent);
 
-            WithBaseUrl(_clientConfig.BaseUrl);
+            if (request.BaseUrl == null)
+                WithBaseUrl(_clientConfig.BaseUrl);
 
             var httpRequest = request.BuildRequest();
             
