@@ -33,5 +33,7 @@ This is only a very basic example of how it works. The framework provides variou
 - Based on the Task Asynchronous Programming (TAP) pattern.
 - Response caching.
 
+For a complete overview of all the features, check out the documentation.
+
 # Documentation
 Check out the main documentation [here](docs/).
