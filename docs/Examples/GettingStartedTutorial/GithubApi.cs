@@ -1,4 +1,5 @@
-﻿using Hawf.Attributes;
+﻿using System.Net;
+using Hawf.Attributes;
 using Hawf.Client;
 
 namespace GettingStartedTutorial;
@@ -6,6 +7,18 @@ namespace GettingStartedTutorial;
 [ApiClient("https://api.github.com")]
 public class GithubApi : ApiBase<GithubApi>
 {
+    public GithubApi()
+    {
+        Configure(options =>
+        {
+            options.HttpHandler = new HttpClientHandler
+            {
+                Proxy = new WebProxy("https://127.0.0.1:5000"),
+                UseProxy = true
+            };
+        });
+    }
+    
     /// <summary>
     /// Get basic information about a user.
     /// </summary>
