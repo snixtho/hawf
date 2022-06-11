@@ -27,7 +27,7 @@ public class ApiClientConfiguration
     /// If true, the code blocks and wait for the rate limit time is over.
     /// Otherwise it throws an RateLimitExceededException.
     /// </summary>
-    public bool WaitForRateLimit { get; set; } = true;
+    public bool WaitForRateLimit { get; set; } = false;
     /// <summary>
     /// Whether to attempt to keep the connection alive.
     /// </summary>
