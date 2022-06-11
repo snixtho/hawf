@@ -97,3 +97,8 @@ Console.WriteLine($"snixtho created their account at {user.CreatedAt}, has {user
 ```
 
 You can find the full source code for this tutorial [here](Examples/GettingStartedTutorial).
+
+
+---
+
+Next: [Client Configuration](client-configuration.md)

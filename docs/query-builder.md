@@ -48,3 +48,7 @@ Here are the options provided that controls how it is generated:
 - `name`: If not null, use this as the name during generation of the query. *Default: `null`*
 - `integerEnum`: If true, convert an enumeration type to an integer value. *Default: `false`*
 - `listSeparator`: If an array or collection is defined as a query parameter, use this string to separate the items. *Default: `","`*
+
+---
+
+Previous: [Building API Requests](building-requests.md) | Next: [Rate Limiting](rate-limiting.md)

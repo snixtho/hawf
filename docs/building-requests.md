@@ -89,3 +89,5 @@ If you don't have any path parameters set, this method is optional. However, Kee
 WithPathValues(1)
 ```
 
+---
+Previous: [Calling API Endpoints](calling-endpoints.md) | Next: [Query Builder](query-builder.md)

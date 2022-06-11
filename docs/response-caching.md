@@ -27,3 +27,7 @@ CacheResponseFor(TimeSpan.FromSeconds(10))
 ```
 
 In this example, the response for the request `/users/1` will be cached for 10 seconds.
+
+---
+
+Previous: [Rate Limiting](rate-limiting.md) | Next: [Configuring the HTTP Handler](http-handler.md)

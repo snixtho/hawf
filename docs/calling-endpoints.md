@@ -59,3 +59,6 @@ The following methods are available for JSON responses:
 - **HTTP PATCH:** `PatchJsonAsync<T>(string path, params object[] values)`
 - **HTTP PUT:** `PutJsonAsync<T>(string path, params object[] values)`
 - **HTTP DELETE:** `DeleteJsonAsync<T>(string path, params object[] values)`
+
+---
+Previous: [Client Configuration](client-configuration.md) | Next: [Building API Requests](building-requests.md)

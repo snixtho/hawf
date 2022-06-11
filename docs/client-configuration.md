@@ -99,3 +99,5 @@ This method is commonly called within the contructor of the API client class. He
 
   The HTTP message handler to use in requests. *Default: `default instance of HttpClientHandler`*
 
+---
+Previous: [Getting Started](getting-started.md) | Next: [Calling API Endpoints](calling-endpoints.md)

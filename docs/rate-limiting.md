@@ -42,3 +42,7 @@ Configure(options => {
 
 ## RateLimitExceededException
 This is thrown when the rate limit is triggered and it contains a property called `TimeLeft` which indicates how much time left before the rate limit can be released.
+
+---
+
+Previous: [Query Builder](query-builder.md) | Next: [Response Caching](response-caching.md)
