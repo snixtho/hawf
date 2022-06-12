@@ -14,25 +14,19 @@ namespace Hawf.Client;
 
 public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 {
-    private ApiClientConfiguration _clientConfig;
-    private HttpClient _client;
+    private readonly ApiClientConfiguration _clientConfig;
+    private readonly HttpClient _client;
     private int _requestCounter;
     private DateTime _requestCounterReset;
-    private ApiMemoryCache _cache;
+    private readonly ApiMemoryCache _cache;
 
-    public ApiBase() => Init();
-    public ApiBase(ApiClientConfiguration config) => Init(config);
-
-    private void Init(ApiClientConfiguration? config=null)
+    public ApiBase()
     {
         // client config
         var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
         var attrInfo = attr ?? throw new Exception("The API must annotate the ApiClient attribute");
 
-        if (config == null)
-            _clientConfig = attrInfo.ClientConfig;
-        else
-            _clientConfig = config;
+        _clientConfig = attrInfo.ClientConfig;
 
         _client = new HttpClient(_clientConfig.HttpHandler);
         _cache = new ApiMemoryCache();
