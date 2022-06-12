@@ -4,7 +4,7 @@ namespace GettingStartedTutorial;
 
 public class GithubBasicUserInfo
 {
-    public string Login { get; set; }
+    public string? Login { get; set; }
     public long Id { get; set; }
     [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; }
@@ -15,5 +15,5 @@ public class GithubBasicUserInfo
     public int Followers { get; set; }
     public int Following { get; set; }
     [JsonPropertyName("avatar_url")]
-    public string AvatarUrl { get; set; }
+    public string? AvatarUrl { get; set; }
 }
