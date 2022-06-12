@@ -2,7 +2,7 @@
 
 namespace Hawf.Utils;
 
-public class ApiMemoryCache : ApiCacheBase
+public class ApiMemoryCache : IApiCacheBase
 {
     private ConcurrentDictionary<string, CacheObject> _cache;
 
