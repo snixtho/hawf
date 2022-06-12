@@ -85,6 +85,9 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
             var httpRequest = request.BuildRequest();
             
             // return cached object if enabled and available
+            if (httpRequest?.RequestUri?.AbsoluteUri == null)
+                throw new InvalidOperationException("The absolute URI for the request is null, did you set a base address?");
+            
             var cacheKey = httpRequest.RequestUri.AbsoluteUri;
             var cacheResponse = request.CacheResponse || _clientConfig.CacheResponse;
             if (cacheResponse)
