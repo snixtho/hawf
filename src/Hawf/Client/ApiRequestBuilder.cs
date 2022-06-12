@@ -152,4 +152,11 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         
         return (T) this;
     }
+
+    protected T WithBearerToken(string token)
+    {
+        WithHeader(HttpHeader.Authorization, $"Bearer {token}");
+        
+        return (T) this;
+    }
 }
