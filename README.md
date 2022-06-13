@@ -32,6 +32,7 @@ This is only a very basic example of how it works. The framework provides variou
 - Can handle rate limits on APIs
 - Based on the Task Asynchronous Programming (TAP) pattern.
 - Response caching.
+- Standardizes the code structure to keep it readable and maintainable.
 
 For a complete overview of all the features, check out the documentation.
 
