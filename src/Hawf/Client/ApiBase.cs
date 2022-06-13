@@ -181,124 +181,124 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
         return await response.Content.ReadAsByteArrayAsync(cancelToken);
     }
 
-    protected async Task<TReturn?> GetJsonAsync<TReturn>(string path, params object[] values)
+    protected async Task<TReturn?> GetJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
-    protected async Task<TReturn?> PostJsonAsync<TReturn>(string path, params object[] values)
+    protected async Task<TReturn?> PostJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
-    protected async Task<TReturn?> PatchJsonAsync<TReturn>(string path, params object[] values)
+    protected async Task<TReturn?> PatchJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
-    protected async Task<TReturn?> PutJsonAsync<TReturn>(string path, params object[] values)
+    protected async Task<TReturn?> PutJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
-    protected async Task<TReturn?> DeleteJsonAsync<TReturn>(string path, params object[] values)
+    protected async Task<TReturn?> DeleteJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
     
-    protected async Task<string> GetStringAsync(string path, params object[] values)
+    protected async Task<string> GetStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<string> PostStringAsync(string path, params object[] values)
+    protected async Task<string> PostStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<string> PatchStringAsync(string path, params object[] values)
+    protected async Task<string> PatchStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<string> PutStringAsync(string path, params object[] values)
+    protected async Task<string> PutStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<string> DeleteStringAsync(string path, params object[] values)
+    protected async Task<string> DeleteStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
     
-    protected async Task<byte[]> GetBytesAsync(string path, params object[] values)
+    protected async Task<byte[]> GetBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<byte[]> PostBytesAsync(string path, params object[] values)
+    protected async Task<byte[]> PostBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<byte[]> PatchBytesAsync(string path, params object[] values)
+    protected async Task<byte[]> PatchBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<byte[]> PutBytesAsync(string path, params object[] values)
+    protected async Task<byte[]> PutBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<byte[]> DeleteBytesAsync(string path, params object[] values)
+    protected async Task<byte[]> DeleteBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
     
-    protected async Task<Stream> GetStreamAsync(string path, params object[] values)
+    protected async Task<Stream> GetStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<Stream> PostStreamAsync(string path, params object[] values)
+    protected async Task<Stream> PostStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<Stream> PatchStreamAsync(string path, params object[] values)
+    protected async Task<Stream> PatchStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<Stream> PutStreamAsync(string path, params object[] values)
+    protected async Task<Stream> PutStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
-    protected async Task<Stream> DeleteStreamAsync(string path, params object[] values)
+    protected async Task<Stream> DeleteStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestStreamAsync(RequestInfo.CancelToken);
