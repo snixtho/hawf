@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -108,5 +109,39 @@ public class RequestGeneratorTests
         var value = await stringBody?.ReadAsStringAsync()!;
         
         Assert.Equal("{\"myKey\":\"MyValue\"}", value);
+    }
+
+    [Fact]
+    public void BuildRequest_Throws_On_Null_BaseAddress()
+    {
+        var request = new ApiRequest
+        {
+            Path = "",
+            PathValues = new List<object>(),
+            Query = new QueryParamsCollection()
+        };
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            request.BuildRequest();
+        });
+    }
+
+    [Fact]
+    public void BuildPath_Throws_On_Invalid_Number_Of_Path_Values()
+    {
+        var request = new ApiRequest
+        {
+            Path = "/{some}/{value}",
+            PathValues = new List<object>
+            {
+                "myValue"
+            }
+        };
+
+        Assert.Throws<InvalidOperationException>(() =>
+        {
+            request.BuildPath();
+        });
     }
 }

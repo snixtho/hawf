@@ -45,7 +45,7 @@ public static class ApiRequestExtensions
     public static HttpRequestMessage BuildRequest(this ApiRequest request)
     {
         var path = request.BuildPath();
-        var query = request.Query.GenerateQuery();
+        var query = request.Query?.GenerateQuery() ?? "";
         var body = request.CreateBodyContent();
 
         if (request.BaseUrl == null)
