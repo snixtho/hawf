@@ -1,6 +1,6 @@
 ﻿namespace Hawf.Utils;
 
-public interface ApiCacheBase
+public interface IApiCacheBase
 {
     public Task Set<T>(string key, T? value, TimeSpan? lifeTime = null);
     public Task<T?> Get<T>(string key);

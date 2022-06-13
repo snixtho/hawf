@@ -11,7 +11,7 @@ public enum TestEnumQueryOption
 public class TestObjQueryOptions
 {
     [QueryProperty("myoption")]
-    public string MyOption { get; set; }
+    public string? MyOption { get; set; }
     [QueryProperty("MyIntOption")]
     public int MyIntOption { get; set; }
     [QueryProperty(IntegerEnum = true)]

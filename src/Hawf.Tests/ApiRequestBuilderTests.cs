@@ -81,7 +81,7 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Path_Value_Added()
     {
-        EnsureNewRequest().AddPathValues("MyValue");
+        EnsureNewRequest().WithPathValues("MyValue");
         
         Assert.Equal(new List<object>{"MyValue"}, RequestInfo.PathValues);
     }
