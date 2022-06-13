@@ -30,3 +30,7 @@ await api.AuthenticateAsync("user", "password");
 var user = await api.GetCurrentUserAsync();
 // do something with user ...
 ```
+
+---
+
+Previous: [Code Structure](code-structure.md)

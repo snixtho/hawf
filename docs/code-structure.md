@@ -77,3 +77,7 @@ await api.Resource2.Post(new Resource1Dto()); // assume some data is created her
 var resource2 = await api.Resource2.Get();
 // ...
 ```
+
+---
+
+Previous: [Configuring the HTTP Handler](http-handler.md) | [Keeping Instance State](keeping-state.md)
