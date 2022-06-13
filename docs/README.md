@@ -8,3 +8,4 @@
 - [Rate Limiting](rate-limiting.md)
 - [Response Caching](response-caching.md)
 - [Configuring the HTTP Handler](http-handler.md)
+- [Code Structure](code-structure.md)
