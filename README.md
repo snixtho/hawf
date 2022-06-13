@@ -1,6 +1,13 @@
 # hawf
 Http API Wrapper Framework - Quickly build API wrappers and clients
 
+# Installation
+You can find the package on [NuGet](https://www.nuget.org/packages/Hawf/) or install through command line:
+
+```
+dotnet add package Hawf
+```
+
 # Basic Usage
 
 Creating an API is as simple as inherting the `ApiBase` and annotate the `ApiClient` attribute:
