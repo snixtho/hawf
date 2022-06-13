@@ -13,6 +13,7 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_Initial_Setup()
     {
+        BuilderRequestFinished();
         EnsureNewRequest();
         
         Assert.NotNull(RequestInfo.Headers);
@@ -23,7 +24,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_Header_Values_Added()
     {
-        EnsureNewRequest().WithHeader("MyHeader", "MyValue");
+        BuilderRequestFinished();
+        WithHeader("MyHeader", "MyValue");
 
         var value = RequestInfo.Headers["MyHeader"];
         
@@ -33,7 +35,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_Ignore_Null_Header_Value()
     {
-        EnsureNewRequest().WithHeader("MyHeader", null);
+        BuilderRequestFinished();
+        WithHeader("MyHeader", null);
 
         Assert.DoesNotContain("MyHeader", (IDictionary<string, string>) RequestInfo.Headers);
     }
@@ -41,7 +44,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_UserAgent_Added()
     {
-        EnsureNewRequest().WithUserAgent("MyUserAgent");
+        BuilderRequestFinished();
+        WithUserAgent("MyUserAgent");
 
         Assert.Contains(HttpHeader.UserAgent, (IDictionary<string, string>) RequestInfo.Headers);
 
@@ -53,7 +57,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_Query_Param_Added()
     {
-        EnsureNewRequest().WithQueryParam("MyParam", "MyValue");
+        BuilderRequestFinished();
+        WithQueryParam("MyParam", "MyValue");
 
         Assert.Contains("MyParam", (IDictionary<string, List<object>>) RequestInfo.Query);
 
@@ -65,7 +70,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_Ignore_Null_Query_Param()
     {
-        EnsureNewRequest().WithQueryParam("MyParam", (string?) null);
+        BuilderRequestFinished();
+        WithQueryParam("MyParam", (string?) null);
 
         Assert.DoesNotContain("MyParam", (IDictionary<string, List<object>>) RequestInfo.Query);
     }
@@ -73,7 +79,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Test_Path_Added()
     {
-        EnsureNewRequest().WithPath("/my/path");
+        BuilderRequestFinished();
+        WithPath("/my/path");
         
         Assert.Equal("/my/path", RequestInfo.Path);
     }
@@ -81,7 +88,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Path_Value_Added()
     {
-        EnsureNewRequest().WithPathValues("MyValue");
+        BuilderRequestFinished();
+        WithPathValues("MyValue");
         
         Assert.Equal(new List<object>{"MyValue"}, RequestInfo.PathValues);
     }
@@ -89,7 +97,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void BaseUrl_Set_With_String()
     {
-        EnsureNewRequest().WithBaseUrl("https://google.com");
+        BuilderRequestFinished();
+        WithBaseUrl("https://google.com");
 
         Assert.Equal(new Uri("https://google.com"), RequestInfo.BaseUrl);
     }
@@ -97,7 +106,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void BaseUrl_Set_With_Uri()
     {
-        EnsureNewRequest().WithBaseUrl(new Uri("https://google.com"));
+        BuilderRequestFinished();
+        WithBaseUrl(new Uri("https://google.com"));
 
         Assert.Equal(new Uri("https://google.com"), RequestInfo.BaseUrl);
     }
@@ -107,7 +117,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     {
         var cancelToken = new CancellationToken();
         
-        EnsureNewRequest().WithCancelToken(cancelToken);
+        BuilderRequestFinished();
+        WithCancelToken(cancelToken);
         
         Assert.Equal(cancelToken, RequestInfo.CancelToken);
     }
@@ -115,7 +126,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void String_Query_Param_Added()
     {
-        EnsureNewRequest().WithQueryOptions(new TestObjQueryOptions {MyOption = "MyValue"});
+        BuilderRequestFinished();
+        WithQueryOptions(new TestObjQueryOptions {MyOption = "MyValue"});
 
         var value = RequestInfo.Query["myoption"][0];
         
@@ -125,7 +137,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Int_Query_Param_Added()
     {
-        EnsureNewRequest().WithQueryOptions(new TestObjQueryOptions {MyIntOption = 1337});
+        BuilderRequestFinished();
+        WithQueryOptions(new TestObjQueryOptions {MyIntOption = 1337});
 
         var value = RequestInfo.Query["MyIntOption"][0];
         
@@ -135,7 +148,8 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     [Fact]
     public void Integer_Enum_Query_Param_Added()
     {
-        EnsureNewRequest().WithQueryOptions(new TestObjQueryOptions {MyEnum = TestEnumQueryOption.One});
+        BuilderRequestFinished();
+        WithQueryOptions(new TestObjQueryOptions {MyEnum = TestEnumQueryOption.One});
         
         var value = RequestInfo.Query["myEnum"][0];
         
