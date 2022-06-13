@@ -68,7 +68,7 @@ public static class ApiRequestExtensions
             Content = body
         };
 
-        if (request.Headers.Count > 0)
+        if (request.Headers != null && request.Headers.Count > 0)
         {
             // add headers
             foreach (var (key, value) in request.Headers)

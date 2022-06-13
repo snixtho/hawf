@@ -144,4 +144,22 @@ public class RequestGeneratorTests
             request.BuildPath();
         });
     }
+
+    [Fact]
+    public void BuildRequest_Path_Set()
+    {
+        var request = new ApiRequest
+        {
+            Path = "/{some}",
+            PathValues = new List<object>
+            {
+                "MyValue"
+            },
+            BaseUrl = new Uri("https://google.com")
+        };
+
+        var httpRequest = request.BuildRequest();
+        
+        Assert.Equal("https://google.com/MyValue", httpRequest.RequestUri?.AbsoluteUri);
+    }
 }
