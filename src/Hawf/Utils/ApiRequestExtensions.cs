@@ -1,5 +1,9 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using Hawf.Client;
+using Hawf.Client.Http;
 
 namespace Hawf.Utils;
 
@@ -24,10 +28,26 @@ public static class ApiRequestExtensions
         return paramsPath;
     }
 
+    public static HttpContent? CreateBodyContent(this ApiRequest request)
+    {
+        switch (request.MimeType)
+        {
+            case MimeType.Json:
+                return JsonContent.Create(request.BodyObject);
+            // case MimeType.Text:
+            default:
+                return new StringContent(request.BodyObject?.ToString() ?? "");
+        }
+    }
+
     public static HttpRequestMessage BuildRequest(this ApiRequest request)
     {
         var path = request.BuildPath();
         var query = request.Query.GenerateQuery();
+        var body = request.CreateBodyContent();
+
+        if (request.BaseUrl == null)
+            throw new InvalidOperationException("Base URL is null, cannot build request.");
 
         var urlBuilder = new UriBuilder(request.BaseUrl)
         {
@@ -42,7 +62,8 @@ public static class ApiRequestExtensions
         var requestMsg = new HttpRequestMessage
         {
             RequestUri = urlBuilder.Uri,
-            Method = request.Method
+            Method = request.Method,
+            Content = body
         };
 
         if (request.Headers.Count > 0)

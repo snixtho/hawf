@@ -245,4 +245,13 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         
         return (T) this;
     }
+
+    protected T WithJsonBody<TBody>(TBody bodyObj)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyObj;
+
+        return (T) this;
+    }
 }
