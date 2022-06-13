@@ -216,6 +216,13 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     {
         EnsureNewRequest();
 
+        if (timeSpan == TimeSpan.Zero)
+        {
+            // ignore zero times
+            RequestInfo.CacheResponse = false;
+            return (T) this;
+        }
+        
         RequestInfo.CacheResponse = true;
         RequestInfo.CacheTime = timeSpan;
         

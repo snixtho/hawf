@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 using System.Threading;
 using Hawf.Client.Http;
 using Hawf.Tests.Models;
@@ -154,5 +155,67 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
         var value = RequestInfo.Query["myEnum"][0];
         
         Assert.Equal("5", value);
+    }
+
+    [Fact]
+    public void Method_Correctly_Set()
+    {
+        BuilderRequestFinished();
+        WithMethod(HttpMethod.Post);
+
+        var method = RequestInfo.Method;
+
+        Assert.Equal(HttpMethod.Post, method);
+    }
+
+    [Fact]
+    public void Request_Cache_Enabled()
+    {
+        BuilderRequestFinished();
+        CacheResponseFor(TimeSpan.FromSeconds(10));
+
+        Assert.True(RequestInfo.CacheResponse);
+        Assert.Equal(TimeSpan.FromSeconds(10), RequestInfo.CacheTime);
+    }
+
+    [Fact]
+    public void Request_Cache_Not_Enabled_With_Zero_Time()
+    {
+        BuilderRequestFinished();
+        CacheResponseFor(TimeSpan.FromSeconds(0));
+
+        Assert.False(RequestInfo.CacheResponse);
+    }
+
+    [Fact]
+    public void Request_Cached_With_Milliseconds()
+    {
+        BuilderRequestFinished();
+        CacheResponseFor(100);
+        
+        Assert.True(RequestInfo.CacheResponse);
+        Assert.Equal(TimeSpan.FromMilliseconds(100), RequestInfo.CacheTime);
+    }
+
+    [Fact]
+    public void Bearer_Token_Set()
+    {
+        BuilderRequestFinished();
+        WithBearerToken("MyToken");
+
+        var token = RequestInfo.Headers[HttpHeader.Authorization];
+        
+        Assert.Equal("Bearer MyToken", token);
+    }
+
+    [Fact]
+    public void Json_Body_Added()
+    {
+        BuilderRequestFinished();
+        
+        var bodyObj = new {MyKey = "MyValue"};
+        WithJsonBody(bodyObj);
+        
+        Assert.Equal(bodyObj, RequestInfo.BodyObject);
     }
 }

@@ -2,6 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Web;
 using Hawf.Client;
 using Hawf.Client.Http;
 
@@ -22,7 +23,8 @@ public static class ApiRequestExtensions
         for (var i = 0; i < matches.Count; i++)
         {
             var match = matches[i];
-            paramsPath = paramsPath.Replace(match.Groups[0].Value, request.PathValues[i].ToString());
+            var encoded = HttpUtility.UrlEncode(request.PathValues[i].ToString());
+            paramsPath = paramsPath.Replace(match.Groups[0].Value, encoded);
         }
 
         return paramsPath;
