@@ -4,7 +4,7 @@ on:
     branches: [dev]
 
 jobs:
-  build:
+  build_and_test:
     env:
       SOLUTION: 'src/Hawf.sln'
     runs-on: ubuntu-latest
