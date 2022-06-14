@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -161,5 +162,139 @@ public class RequestGeneratorTests
         var httpRequest = request.BuildRequest();
         
         Assert.Equal("https://google.com/MyValue", httpRequest.RequestUri?.AbsoluteUri);
+    }
+
+    [Fact]
+    public void BuildRequest_Query_Set()
+    {
+        var request = new ApiRequest
+        {
+            Path = "",
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com"),
+            Query = new QueryParamsCollection()
+            {
+                {"key", "value"}
+            }
+        };
+
+        var httpRequest = request.BuildRequest();
+        
+        Assert.Equal("https://google.com/?key=value", httpRequest.RequestUri?.AbsoluteUri);
+    }
+
+    [Fact]
+    public async Task BuildRequest_Body_Set()
+    {
+        var request = new ApiRequest
+        {
+            Path = "",
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com"),
+            BodyObject = "content value",
+            MimeType = MimeType.Text
+        };
+
+        var httpRequest = request.BuildRequest();
+        var value = await httpRequest.Content?.ReadAsStringAsync()!;
+        
+        Assert.Equal("content value", value);
+    }
+
+    [Fact]
+    public void BuildRequest_Full_Url_Set()
+    {
+        var request = new ApiRequest
+        {
+            Path = "/{some}",
+            PathValues = new List<object>
+            {
+                "MyValue"
+            },
+            BaseUrl = new Uri("https://google.com"),
+            Query = new QueryParamsCollection()
+            {
+                {"key", "value"}
+            }
+        };
+
+        var httpRequest = request.BuildRequest();
+        
+        Assert.Equal("https://google.com/MyValue?key=value", httpRequest.RequestUri?.AbsoluteUri);
+    }
+
+
+    [Fact]
+    public void BuildRequest_Avoids_Double_Slashes()
+    {
+        var request = new ApiRequest
+        {
+            Path = "/path",
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com/"),
+        };
+        
+        var httpRequest = request.BuildRequest();
+        
+        Assert.Equal("https://google.com/path", httpRequest.RequestUri?.AbsoluteUri);
+    }
+
+    [Fact]
+    public void BuildRequest_Sets_Correct_Method()
+    {
+        var request = new ApiRequest
+        {
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com/"),
+            Method = HttpMethod.Post
+        };
+
+        var httpRequest = request.BuildRequest();
+        
+        Assert.Equal(HttpMethod.Post, httpRequest.Method);
+    }
+
+    [Fact]
+    public async Task BuildRequest_Sets_Correct_Body()
+    {
+        var request = new ApiRequest
+        {
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com/"),
+            BodyObject = "my value",
+            MimeType = MimeType.Text
+        };
+
+        var httpRequest = request.BuildRequest();
+        var content = await httpRequest.Content?.ReadAsStringAsync()!;
+        
+        Assert.Equal("my value", content);
+    }
+
+    [Fact]
+    public void BuildRequest_Adds_Headers()
+    {
+        var request = new ApiRequest
+        {
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com/"),
+            Headers = new Dictionary<string, string>()
+            {
+                {"header1", "value1"},
+                {HttpHeader.Authorization, "Bearer mytoken"},
+                {HttpHeader.UserAgent, "my user agent"}
+            }
+        };
+
+        var httpRequest = request.BuildRequest();
+        
+        Assert.Equal("Bearer", httpRequest.Headers.Authorization?.Scheme);
+        Assert.Equal("mytoken", httpRequest.Headers.Authorization?.Parameter);
+        
+        Assert.Equal("my user agent", httpRequest.Headers.UserAgent.ToString());
+
+        var header1Value = httpRequest.Headers.GetValues("header1").First();
+        
+        Assert.Equal("value1", header1Value);
     }
 }

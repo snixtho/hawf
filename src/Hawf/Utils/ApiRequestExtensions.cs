@@ -12,22 +12,22 @@ public static class ApiRequestExtensions
 {
     public static string BuildPath(this ApiRequest request)
     {
-        var matches = Regex.Matches(request.Path, @"{[a-zA-Z0-9_]+}");
+        var path = request?.Path ?? "";
+        
+        var matches = Regex.Matches(path, @"{[a-zA-Z0-9_]+}");
 
         if (matches.Count != request.PathValues.Count)
             throw new InvalidOperationException(
                 $"Parameter count in path is not equal to values count ({matches.Count}!={request.PathValues.Count}).");
-            
-        var paramsPath = request.Path;
 
         for (var i = 0; i < matches.Count; i++)
         {
             var match = matches[i];
             var encoded = HttpUtility.UrlEncode(request.PathValues[i].ToString());
-            paramsPath = paramsPath.Replace(match.Groups[0].Value, encoded);
+            path = path.Replace(match.Groups[0].Value, encoded);
         }
 
-        return paramsPath;
+        return path;
     }
 
     public static HttpContent? CreateBodyContent(this ApiRequest request)
