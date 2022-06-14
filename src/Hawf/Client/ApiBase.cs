@@ -4,6 +4,8 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Reflection;
 using System.Text.Json;
+using System.Xml;
+using System.Xml.Serialization;
 using Hawf.Attributes;
 using Hawf.Client.Configuration;
 using Hawf.Client.Exceptions;
@@ -162,146 +164,373 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
             PropertyNameCaseInsensitive = true
         });
     }
+
+    /// <summary>
+    /// Perform a request and serialize the XML response.
+    /// </summary>
+    /// <param name="cancelToken"></param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
+    private async Task<TReturn?> RequestXmlAsync<TReturn>(CancellationToken cancelToken = default)
+    {
+        var response = await SendRequestAsync(RequestInfo, cancelToken);
+        var responseText = await response.Content.ReadAsStreamAsync(cancelToken);
+        var serializer = new XmlSerializer(typeof(TReturn));
+        var responseObject = serializer.Deserialize(responseText);
+        return (TReturn?) responseObject;
+    }
     
+    /// <summary>
+    /// Perform a request and return the result as a string.
+    /// </summary>
+    /// <param name="cancelToken"></param>
+    /// <returns></returns>
     protected async Task<string> RequestStringAsync(CancellationToken cancelToken = default)
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         return await response.Content.ReadAsStringAsync(cancelToken);
     }
     
+    /// <summary>
+    /// Perform a request and return a stream containing the result.
+    /// </summary>
+    /// <param name="cancelToken"></param>
+    /// <returns></returns>
     protected async Task<Stream> RequestStreamAsync(CancellationToken cancelToken = default)
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         return await response.Content.ReadAsStreamAsync(cancelToken);
     }
     
+    /// <summary>
+    /// Perform a request and get the raw bytes of the response content.
+    /// </summary>
+    /// <param name="cancelToken"></param>
+    /// <returns></returns>
     protected async Task<byte[]> RequestBytesAsync(CancellationToken cancelToken = default)
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         return await response.Content.ReadAsByteArrayAsync(cancelToken);
     }
 
+    /***********/
+    
+    /// <summary>
+    /// Perform a GET request and serialize the returned JSON.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
     protected async Task<TReturn?> GetJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a POST request and serialize the returned JSON.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
     protected async Task<TReturn?> PostJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PATCH request and serialize the returned JSON.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
     protected async Task<TReturn?> PatchJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PUT request and serialize the returned JSON.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
     protected async Task<TReturn?> PutJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a DELETE request and serialize the returned JSON.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
     protected async Task<TReturn?> DeleteJsonAsync<TReturn>(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
     }
     
+    /***********/
     
+    /// <summary>
+    /// Perform a GET request and return the response as a string.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<string> GetStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a POST request and return the response as a string.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<string> PostStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PATCH request and return the response as a string.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<string> PatchStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PUT request and return the response as a string.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<string> PutStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a DELETE request and return the response as a string.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<string> DeleteStringAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestStringAsync(RequestInfo.CancelToken);
     }
     
+    /***********/
     
+    /// <summary>
+    /// Perform a GET request and return the response as a raw bytes.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<byte[]> GetBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a POST request and return the response as a raw bytes.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<byte[]> PostBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PATCH request and return the response as a raw bytes.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<byte[]> PatchBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PUT request and return the response as a raw bytes.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<byte[]> PutBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a DELETE request and return the response as a raw bytes.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<byte[]> DeleteBytesAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestBytesAsync(RequestInfo.CancelToken);
     }
     
+    /***********/
     
+    /// <summary>
+    /// Perform a GET request and return the response as a stream.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<Stream> GetStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a POST request and return the response as a stream.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<Stream> PostStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PATCH request and return the response as a stream.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<Stream> PatchStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a PUT request and return the response as a stream.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<Stream> PutStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
         return await RequestStreamAsync(RequestInfo.CancelToken);
     }
     
+    /// <summary>
+    /// Perform a DELETE request and return the response as a stream.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <returns></returns>
     protected async Task<Stream> DeleteStreamAsync(string path="", params object[] values)
     {
         WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
         return await RequestStreamAsync(RequestInfo.CancelToken);
+    }
+    
+    /***********/
+    
+    /// <summary>
+    /// Perform a GET request and serialize the returned XML.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
+    protected async Task<TReturn?> GetXmlAsync<TReturn>(string path="", params object[] values)
+    {
+        WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Get);
+        return await RequestXmlAsync<TReturn>(RequestInfo.CancelToken);
+    }
+    
+    /// <summary>
+    /// Perform a POST request and serialize the returned XML.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
+    protected async Task<TReturn?> PostXmlAsync<TReturn>(string path="", params object[] values)
+    {
+        WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Post);
+        return await RequestXmlAsync<TReturn>(RequestInfo.CancelToken);
+    }
+    
+    /// <summary>
+    /// Perform a PATCH request and serialize the returned XML.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
+    protected async Task<TReturn?> PatchXmlAsync<TReturn>(string path="", params object[] values)
+    {
+        WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Patch);
+        return await RequestXmlAsync<TReturn>(RequestInfo.CancelToken);
+    }
+    
+    /// <summary>
+    /// Perform a PUT request and serialize the returned XML.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
+    protected async Task<TReturn?> PutXmlAsync<TReturn>(string path="", params object[] values)
+    {
+        WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Put);
+        return await RequestJsonAsync<TReturn>(RequestInfo.CancelToken);
+    }
+    
+    /// <summary>
+    /// Perform a DELETE request and serialize the returned XML.
+    /// </summary>
+    /// <param name="path">Path to the resource</param>
+    /// <param name="values">Values to be replaced in the path parameters</param>
+    /// <typeparam name="TReturn"></typeparam>
+    /// <returns></returns>
+    protected async Task<TReturn?> DeleteXmlAsync<TReturn>(string path="", params object[] values)
+    {
+        WithPath(path).WithPathValues(values).WithMethod(HttpMethod.Delete);
+        return await RequestXmlAsync<TReturn>(RequestInfo.CancelToken);
     }
     
     #endregion
