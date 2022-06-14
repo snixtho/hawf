@@ -1,4 +1,6 @@
 # hawf
+[![Run Tests](https://github.com/snixtho/hawf/actions/workflows/run-tests.yml/badge.svg)](https://github.com/snixtho/hawf/actions/workflows/run-tests.yml) [![Publish Release](https://github.com/snixtho/hawf/actions/workflows/publish-release.yml/badge.svg)](https://github.com/snixtho/hawf/actions/workflows/publish-release.yml) ![Nuget](https://img.shields.io/nuget/v/Hawf)
+
 Http API Wrapper Framework - Quickly build API wrappers and clients
 
 # Installation
