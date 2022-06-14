@@ -216,6 +216,13 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     {
         EnsureNewRequest();
 
+        if (timeSpan == TimeSpan.Zero)
+        {
+            // ignore zero times
+            RequestInfo.CacheResponse = false;
+            return (T) this;
+        }
+        
         RequestInfo.CacheResponse = true;
         RequestInfo.CacheTime = timeSpan;
         
@@ -243,6 +250,15 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     {
         WithHeader(HttpHeader.Authorization, $"Bearer {token}");
         
+        return (T) this;
+    }
+
+    protected T WithJsonBody<TBody>(TBody bodyObj)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyObj;
+
         return (T) this;
     }
 }

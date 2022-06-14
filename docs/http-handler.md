@@ -15,4 +15,4 @@ Configure(options => {
 ```
 
 ---
-Previous: [Response Caching](response-caching.md)
+Previous: [Response Caching](response-caching.md) | [Code Structure](code-structure.md)

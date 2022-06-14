@@ -1,6 +1,13 @@
 # hawf
 Http API Wrapper Framework - Quickly build API wrappers and clients
 
+# Installation
+You can find the package on [NuGet](https://www.nuget.org/packages/Hawf/) or install through command line:
+
+```
+dotnet add package Hawf
+```
+
 # Basic Usage
 
 Creating an API is as simple as inherting the `ApiBase` and annotate the `ApiClient` attribute:
@@ -32,6 +39,7 @@ This is only a very basic example of how it works. The framework provides variou
 - Can handle rate limits on APIs
 - Based on the Task Asynchronous Programming (TAP) pattern.
 - Response caching.
+- Standardizes the code structure to keep it readable and maintainable.
 
 For a complete overview of all the features, check out the documentation.
 
