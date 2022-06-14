@@ -253,6 +253,13 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         return (T) this;
     }
 
+    /// <summary>
+    /// Add an object and set the content type to application/json.
+    /// The object is serialized to JSON when performing the request
+    /// </summary>
+    /// <param name="bodyObj">Object to be serialized to JSON</param>
+    /// <typeparam name="TBody"></typeparam>
+    /// <returns></returns>
     protected T WithJsonBody<TBody>(TBody bodyObj)
     {
         EnsureNewRequest();
