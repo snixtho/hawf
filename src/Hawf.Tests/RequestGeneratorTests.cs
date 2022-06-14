@@ -297,4 +297,19 @@ public class RequestGeneratorTests
         
         Assert.Equal("value1", header1Value);
     }
+
+    [Fact]
+    public void BuildRequest_Sets_KeepAlive()
+    {
+        var request = new ApiRequest
+        {
+            PathValues = new List<object>(),
+            BaseUrl = new Uri("https://google.com/"),
+            KeepAlive = true
+        };
+        
+        var httpRequest = request.BuildRequest();
+        
+        Assert.False(httpRequest.Headers.ConnectionClose);
+    }
 }
