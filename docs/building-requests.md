@@ -59,6 +59,21 @@ HTTP basic auth is supported out of the box with `WithBasicAuth`. It will automa
 WithBasicAuth("username", "password")
 ```
 
+## Setting Request Body
+The builder provides method for manipulating the body of the request.
+
+### JSON Body
+To encode JSON automatically and set it in the request body, use the `WithJsonBody` method:
+```cs
+WithJsonBody(new {
+    Key = "value",
+    AnotherKey = 12345
+    // ...
+})
+```
+
+In addition to anonymouse types, you can also pass instances of any object that is supported by for serialization [`System.Text.Json`](https://docs.microsoft.com/en-us/dotnet/api/system.text.json?view=net-6.0)
+
 ## Cancellation token
 You can provide the user with a cancellation token that they use in their programs and can be used to stop current requests if needed. The method `WithCancelToken` is provided for this:
 ```cs
