@@ -280,7 +280,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         EnsureNewRequest();
 
         RequestInfo.BodyObject = bodyContent;
-        RequestInfo.MimeType = MimeType.Json;
+        RequestInfo.ContentType = MimeType.Json;
 
         return (T) this;
     }
@@ -295,7 +295,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         EnsureNewRequest();
 
         RequestInfo.BodyObject = bodyContent;
-        RequestInfo.MimeType = MimeType.Text;
+        RequestInfo.ContentType = MimeType.Text;
 
         return (T) this;
     }

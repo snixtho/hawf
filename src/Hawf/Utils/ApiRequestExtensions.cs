@@ -32,7 +32,7 @@ public static class ApiRequestExtensions
 
     public static HttpContent? CreateBodyContent(this ApiRequest request)
     {
-        switch (request.MimeType)
+        switch (request.ContentType)
         {
             case MimeType.Json:
                 return JsonContent.Create(request.BodyObject);

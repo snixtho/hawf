@@ -15,5 +15,5 @@ public class ApiRequest
     public bool CacheResponse { get; set; } = false;
     public TimeSpan? CacheTime { get; set; }
     public object? BodyObject { get; set; }
-    public string MimeType { get; set; } = Http.MimeType.Text;
+    public string ContentType { get; set; } = Http.MimeType.Text;
 }
