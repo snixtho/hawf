@@ -275,11 +275,27 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <param name="bodyObj">Object to be serialized to JSON</param>
     /// <typeparam name="TBody"></typeparam>
     /// <returns></returns>
-    protected T WithJsonBody<TBody>(TBody bodyObj)
+    protected T WithJsonBody<TBody>(TBody bodyContent)
     {
         EnsureNewRequest();
 
-        RequestInfo.BodyObject = bodyObj;
+        RequestInfo.BodyObject = bodyContent;
+        RequestInfo.MimeType = MimeType.Json;
+
+        return (T) this;
+    }
+
+    /// <summary>
+    /// Add a string body to the requests and set content type to plain/text.
+    /// </summary>
+    /// <param name="bodyContent"></param>
+    /// <returns></returns>
+    protected T WithStringBody(string bodyContent)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyContent;
+        RequestInfo.MimeType = MimeType.Text;
 
         return (T) this;
     }

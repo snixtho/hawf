@@ -229,4 +229,14 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
 
         Assert.Equal("Basic bmFtZTpwYXNzd29yZA==", token);
     }
+
+    [Fact]
+    public void String_Body_Added()
+    {
+        BuilderRequestFinished();
+
+        WithStringBody("My Body");
+        
+        Assert.Equal("My Body", RequestInfo.BodyObject);
+    }
 }
