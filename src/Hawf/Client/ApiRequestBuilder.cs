@@ -2,6 +2,7 @@
 using System.Net.Cache;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using Hawf.Attributes;
 using Hawf.Client;
 using Hawf.Client.Http;
@@ -250,6 +251,20 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     {
         WithHeader(HttpHeader.Authorization, $"Bearer {token}");
         
+        return (T) this;
+    }
+
+    /// <summary>
+    /// Set the authorization header to basic auth.
+    /// </summary>
+    /// <param name="username">Name of the user</param>
+    /// <param name="password">User's password</param>
+    /// <returns></returns>
+    protected T WithBasicAuth(string username, string password)
+    {
+        var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+        WithHeader(HttpHeader.Authorization, $"Basic {encoded}");
+
         return (T) this;
     }
 

@@ -218,4 +218,15 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
         
         Assert.Equal(bodyObj, RequestInfo.BodyObject);
     }
+
+    [Fact]
+    public void Sets_Basic_Auth_Correctly()
+    {
+        BuilderRequestFinished();
+        WithBasicAuth("name", "password");
+
+        var token = RequestInfo.Headers[HttpHeader.Authorization];
+
+        Assert.Equal("Basic bmFtZTpwYXNzd29yZA==", token);
+    }
 }
