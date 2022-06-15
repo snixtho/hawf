@@ -33,4 +33,4 @@ var user = await api.GetCurrentUserAsync();
 
 ---
 
-Previous: [Code Structure](code-structure.md)
+Previous: [Code Structure](code-structure.md) | Next: [Extending The API](extending-the-api.md)

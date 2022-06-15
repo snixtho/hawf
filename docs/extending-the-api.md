@@ -53,3 +53,7 @@ protected T WithHeader(string name, string? value)
     return (T) this;
 }
 ```
+
+---
+
+Previous: [Keeping Instance State](keeping-state.md)
