@@ -81,3 +81,24 @@ var resource2 = await api.Resource2.Get();
 ---
 
 Previous: [Configuring the HTTP Handler](http-handler.md) | [Keeping Instance State](keeping-state.md)
+
+## Inheritance
+You can create base API classes that other classes in your API clients inherit if you have common methods that are used.
+
+For example:
+
+*MyApiBase*
+```cs
+public class MyApiBase<T> : ApiBase<T> where T : MyApiBase<T>
+{
+    // ...
+}
+```
+
+*MyApi*
+```cs
+public class MyApi : MyApiBase<MyApi>
+{
+    // ...
+}
+```
