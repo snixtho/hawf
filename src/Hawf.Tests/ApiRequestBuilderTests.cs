@@ -218,4 +218,45 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
         
         Assert.Equal(bodyObj, RequestInfo.BodyObject);
     }
+
+    [Fact]
+    public void Sets_Basic_Auth_Correctly()
+    {
+        BuilderRequestFinished();
+        WithBasicAuth("name", "password");
+
+        var token = RequestInfo.Headers[HttpHeader.Authorization];
+
+        Assert.Equal("Basic bmFtZTpwYXNzd29yZA==", token);
+    }
+
+    [Fact]
+    public void String_Body_Added()
+    {
+        BuilderRequestFinished();
+
+        WithStringBody("My Body");
+        
+        Assert.Equal("My Body", RequestInfo.BodyObject);
+    }
+
+    [Fact]
+    public void Content_Type_Set_Correctly()
+    {
+        BuilderRequestFinished();
+        WithContentType(MimeType.Json);
+
+        Assert.Equal(MimeType.Json, RequestInfo.ContentType);
+    }
+
+    [Fact]
+    public void Xml_Body_Added()
+    {
+        BuilderRequestFinished();
+        
+        var bodyObj = new {MyKey = "MyValue"};
+        WithXmlBody(bodyObj);
+        
+        Assert.Equal(bodyObj, RequestInfo.BodyObject);
+    }
 }

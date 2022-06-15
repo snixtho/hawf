@@ -9,7 +9,7 @@ public class ApiClientAttribute : Attribute
     public ApiClientConfiguration ClientConfig { get; }
 
     public ApiClientAttribute(
-        string baseUrl, 
+        string baseUrl="", 
         string userAgent="Hawf", 
         int rateLimitMaxRequests=5, 
         int rateLimitTimespan=60000, 

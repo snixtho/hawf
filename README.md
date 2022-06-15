@@ -36,9 +36,9 @@ This is only a very basic example of how it works. The framework provides variou
 
 # Features
 - Quickly define your API endpoints into client code with a rich builder API.
-- Supports automatic JSON deserialization.
+- Supports automatic JSON serialization/deserialization.
 - Handles authentication and authorization of your endpoints.
-- Can handle rate limits on APIs
+- Can avoid rate limits to trigger on APIs
 - Based on the Task Asynchronous Programming (TAP) pattern.
 - Response caching.
 - Standardizes the code structure to keep it readable and maintainable.

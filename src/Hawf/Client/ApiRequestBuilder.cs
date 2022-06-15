@@ -2,6 +2,7 @@
 using System.Net.Cache;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using Hawf.Attributes;
 using Hawf.Client;
 using Hawf.Client.Http;
@@ -253,11 +254,67 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         return (T) this;
     }
 
-    protected T WithJsonBody<TBody>(TBody bodyObj)
+    /// <summary>
+    /// Set the authorization header to basic auth.
+    /// </summary>
+    /// <param name="username">Name of the user</param>
+    /// <param name="password">User's password</param>
+    /// <returns></returns>
+    protected T WithBasicAuth(string username, string password)
+    {
+        var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{username}:{password}"));
+        WithHeader(HttpHeader.Authorization, $"Basic {encoded}");
+
+        return (T) this;
+    }
+
+    protected T WithContentType(string mimeType)
     {
         EnsureNewRequest();
 
-        RequestInfo.BodyObject = bodyObj;
+        RequestInfo.ContentType = mimeType;
+
+        return (T) this;
+    }
+
+    /// <summary>
+    /// Add an object and set the content type to application/json.
+    /// The object is serialized to JSON when performing the request
+    /// </summary>
+    /// <param name="bodyContent">Object to be serialized to JSON</param>
+    /// <typeparam name="TBody"></typeparam>
+    /// <returns></returns>
+    protected T WithJsonBody<TBody>(TBody bodyContent)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyContent;
+        WithContentType(MimeType.Json);
+
+        return (T) this;
+    }
+
+    /// <summary>
+    /// Add a string body to the requests and set content type to plain/text.
+    /// </summary>
+    /// <param name="bodyContent"></param>
+    /// <returns></returns>
+    protected T WithStringBody(string bodyContent)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyContent;
+        WithContentType(MimeType.Text);
+
+        return (T) this;
+    }
+
+    protected T WithXmlBody<TBody>(TBody bodyContent)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyContent;
+        WithContentType(MimeType.Xml);
 
         return (T) this;
     }

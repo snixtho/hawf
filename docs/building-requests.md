@@ -44,6 +44,36 @@ CacheResponseFor(TimeSpan.FromSeconds(10))
 
 For more information about response caching check out the [Response Caching](response-caching.md) pages.
 
+## Authorization
+Two methods are currently provided for authorization of API endpoints.
+
+### Bearer Tokens
+You can use the `WithBearerToken` to authorize with access tokens in the bearer format:
+```cs
+WithBearerToken("myToken")
+```
+
+### Basic Auth
+HTTP basic auth is supported out of the box with `WithBasicAuth`. It will automatically encode the passed parameters in the correct format and set the header.
+```cs
+WithBasicAuth("username", "password")
+```
+
+## Setting Request Body
+The builder provides method for manipulating the body of the request.
+
+### JSON Body
+To encode JSON automatically and set it in the request body, use the `WithJsonBody` method:
+```cs
+WithJsonBody(new {
+    Key = "value",
+    AnotherKey = 12345
+    // ...
+})
+```
+
+In addition to anonymouse types, you can also pass instances of any object that is supported by for serialization [`System.Text.Json`](https://docs.microsoft.com/en-us/dotnet/api/system.text.json?view=net-6.0)
+
 ## Cancellation token
 You can provide the user with a cancellation token that they use in their programs and can be used to stop current requests if needed. The method `WithCancelToken` is provided for this:
 ```cs

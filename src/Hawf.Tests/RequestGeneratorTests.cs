@@ -80,7 +80,7 @@ public class RequestGeneratorTests
         var request = new ApiRequest
         {
             BodyObject = "My String Value",
-            MimeType = MimeType.Text
+            ContentType = MimeType.Text
         };
 
         var body = request.CreateBodyContent();
@@ -99,7 +99,7 @@ public class RequestGeneratorTests
         var request = new ApiRequest
         {
             BodyObject = new { MyKey = "MyValue" },
-            MimeType = MimeType.Json
+            ContentType = MimeType.Json
         };
 
         var body = request.CreateBodyContent();
@@ -192,7 +192,7 @@ public class RequestGeneratorTests
             PathValues = new List<object>(),
             BaseUrl = new Uri("https://google.com"),
             BodyObject = "content value",
-            MimeType = MimeType.Text
+            ContentType = MimeType.Text
         };
 
         var httpRequest = request.BuildRequest();
@@ -262,7 +262,7 @@ public class RequestGeneratorTests
             PathValues = new List<object>(),
             BaseUrl = new Uri("https://google.com/"),
             BodyObject = "my value",
-            MimeType = MimeType.Text
+            ContentType = MimeType.Text
         };
 
         var httpRequest = request.BuildRequest();

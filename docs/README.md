@@ -10,3 +10,4 @@
 - [Configuring the HTTP Handler](http-handler.md)
 - [Code Structure](code-structure.md)
 - [Keeping Instance State](keeping-state.md)
+- [Extending The API](extending-the-api.md)
