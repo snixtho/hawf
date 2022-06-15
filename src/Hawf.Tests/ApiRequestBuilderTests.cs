@@ -239,4 +239,24 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
         
         Assert.Equal("My Body", RequestInfo.BodyObject);
     }
+
+    [Fact]
+    public void Content_Type_Set_Correctly()
+    {
+        BuilderRequestFinished();
+        WithContentType(MimeType.Json);
+
+        Assert.Equal(MimeType.Json, RequestInfo.ContentType);
+    }
+
+    [Fact]
+    public void Xml_Body_Added()
+    {
+        BuilderRequestFinished();
+        
+        var bodyObj = new {MyKey = "MyValue"};
+        WithXmlBody(bodyObj);
+        
+        Assert.Equal(bodyObj, RequestInfo.BodyObject);
+    }
 }

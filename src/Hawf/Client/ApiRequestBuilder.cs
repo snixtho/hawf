@@ -268,11 +268,20 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         return (T) this;
     }
 
+    protected T WithContentType(string mimeType)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.ContentType = mimeType;
+
+        return (T) this;
+    }
+
     /// <summary>
     /// Add an object and set the content type to application/json.
     /// The object is serialized to JSON when performing the request
     /// </summary>
-    /// <param name="bodyObj">Object to be serialized to JSON</param>
+    /// <param name="bodyContent">Object to be serialized to JSON</param>
     /// <typeparam name="TBody"></typeparam>
     /// <returns></returns>
     protected T WithJsonBody<TBody>(TBody bodyContent)
@@ -280,7 +289,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         EnsureNewRequest();
 
         RequestInfo.BodyObject = bodyContent;
-        RequestInfo.ContentType = MimeType.Json;
+        WithContentType(MimeType.Json);
 
         return (T) this;
     }
@@ -295,7 +304,17 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         EnsureNewRequest();
 
         RequestInfo.BodyObject = bodyContent;
-        RequestInfo.ContentType = MimeType.Text;
+        WithContentType(MimeType.Text);
+
+        return (T) this;
+    }
+
+    protected T WithXmlBody<TBody>(TBody bodyContent)
+    {
+        EnsureNewRequest();
+
+        RequestInfo.BodyObject = bodyContent;
+        WithContentType(MimeType.Xml);
 
         return (T) this;
     }
