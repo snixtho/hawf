@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Web;
+using System.Xml.Serialization;
 using Hawf.Client;
 using Hawf.Client.Http;
 
@@ -36,6 +37,8 @@ public static class ApiRequestExtensions
         {
             case MimeType.Json:
                 return JsonContent.Create(request.BodyObject);
+            case MimeType.Xml:
+                return XmlContent.Create(request.BodyObject);
             // case MimeType.Text:
             default:
                 return new StringContent(request.BodyObject?.ToString() ?? "");
