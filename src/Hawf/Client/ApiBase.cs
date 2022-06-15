@@ -146,7 +146,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     /// </summary>
     /// <param name="cancelToken"></param>
     /// <returns></returns>
-    private async Task<HttpResponseMessage> RequestAsync(CancellationToken cancelToken = default)
+    protected async Task<HttpResponseMessage> RequestAsync(CancellationToken cancelToken = default)
         => await SendRequestAsync(RequestInfo, cancelToken);
 
     /// <summary>
@@ -155,7 +155,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     /// <param name="cancelToken"></param>
     /// <typeparam name="TReturn"></typeparam>
     /// <returns></returns>
-    private async Task<TReturn?> RequestJsonAsync<TReturn>(CancellationToken cancelToken = default)
+    protected async Task<TReturn?> RequestJsonAsync<TReturn>(CancellationToken cancelToken = default)
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         var responseText = await response.Content.ReadAsStringAsync(cancelToken);
@@ -171,7 +171,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     /// <param name="cancelToken"></param>
     /// <typeparam name="TReturn"></typeparam>
     /// <returns></returns>
-    private async Task<TReturn?> RequestXmlAsync<TReturn>(CancellationToken cancelToken = default)
+    protected async Task<TReturn?> RequestXmlAsync<TReturn>(CancellationToken cancelToken = default)
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         var responseText = await response.Content.ReadAsStreamAsync(cancelToken);
