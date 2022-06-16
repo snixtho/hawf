@@ -74,6 +74,40 @@ WithJsonBody(new {
 
 In addition to anonymouse types, you can also pass instances of any object that is supported by for serialization [`System.Text.Json`](https://docs.microsoft.com/en-us/dotnet/api/system.text.json?view=net-6.0)
 
+### XML Body
+XML is also supported and C# objects can be serialized automatically into XML in for the request body using the `WithXmlBody` method:
+```cs
+WithXmlBody(new {
+    Key = "value",
+    AnotherKey = 12345
+    // ...
+})
+```
+
+### String Body
+You can set a normal string as the body with the `WithStringBody` method:
+```cs
+WithStringBody("my string")
+```
+
+## Form Data
+Form data can be set to the body of the request with two methods. The builder supports both multipart and urlencoded forms.
+
+### URL Encoded Form Data
+With the `WithFormParam`, the builder sets the content type to `application/x-www-form-urlencoded` and adds the provided key/value pair to the request. It will automatically URL-encode the value upon sending the request. Any value is accepted as long as it can be converted to a string (it implements a .ToString() method).
+```cs
+WithFormParam("MyKey", "My Value")
+```
+
+### Multipart Form Data
+Multipart form data can be added with the `WithMultipartFormData` method. Upon generation of the body, the value types are checked and generated in accordance. Filestream and byte arrays have specially supported conversion, while anything else is converted to the string with the `.ToString()` method that they implement.
+
+Example:
+```cs
+var file = File.Open("example.txt", FileAccess.Open);
+WithMultipartFormData("MyKey", file);
+```
+
 ## Cancellation token
 You can provide the user with a cancellation token that they use in their programs and can be used to stop current requests if needed. The method `WithCancelToken` is provided for this:
 ```cs
