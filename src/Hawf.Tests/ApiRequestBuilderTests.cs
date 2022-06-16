@@ -20,6 +20,7 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
         Assert.NotNull(RequestInfo.Headers);
         Assert.NotNull(RequestInfo.Query);
         Assert.NotNull(RequestInfo.PathValues);
+        Assert.NotNull(RequestInfo.FormData);
     }
 
     [Fact]

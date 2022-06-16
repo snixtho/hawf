@@ -27,6 +27,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         RequestInfo.Headers = new Dictionary<string, string>();
         RequestInfo.PathValues = new List<object>();
         RequestInfo.Query = new QueryParamsCollection();
+        RequestInfo.FormData = new FormDataCollection();
         
         _isBuildingRequest = true;
         

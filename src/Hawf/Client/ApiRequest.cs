@@ -16,4 +16,5 @@ public class ApiRequest
     public TimeSpan? CacheTime { get; set; }
     public object? BodyObject { get; set; }
     public string ContentType { get; set; } = Http.MimeType.Text;
+    public FormDataCollection? FormData { get; set; }
 }

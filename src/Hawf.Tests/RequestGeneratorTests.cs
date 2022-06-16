@@ -53,7 +53,7 @@ public class RequestGeneratorTests
             }
         };
 
-        var query = request.Query.GenerateQuery();
+        var query = request.Query.GenerateString();
         
         Assert.Equal("?myParam1=myValue1&myParam2=123", query);
     }
@@ -69,7 +69,7 @@ public class RequestGeneratorTests
             }
         };
         
-        var query = request.Query.GenerateQuery();
+        var query = request.Query.GenerateString();
         
         Assert.Equal("?myParam1=my+value", query);
     }

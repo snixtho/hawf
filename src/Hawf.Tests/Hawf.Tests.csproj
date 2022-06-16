@@ -24,4 +24,11 @@
       <ProjectReference Include="..\Hawf\Hawf.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Data\example.txt" />
+      <Content Include="Data\example.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

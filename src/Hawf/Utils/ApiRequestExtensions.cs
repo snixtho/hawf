@@ -31,6 +31,12 @@ public static class ApiRequestExtensions
         return path;
     }
 
+    private static void EnsureFormDataExists(FormDataCollection? formData, ApiRequest request)
+    {
+        if (formData == null)
+            throw new InvalidOperationException($"Form data cannot be null with mimetype: {request.ContentType}");
+    }
+    
     public static HttpContent? CreateBodyContent(this ApiRequest request)
     {
         switch (request.ContentType)
@@ -39,6 +45,12 @@ public static class ApiRequestExtensions
                 return JsonContent.Create(request.BodyObject);
             case MimeType.Xml:
                 return XmlContent.Create(request.BodyObject);
+            case MimeType.FormUrlEncoded:
+                EnsureFormDataExists(request.FormData, request);
+                return new FormUrlEncodedContent(request.FormData.ToUrlEncodedCollection());
+            case MimeType.MultipartForm:
+                EnsureFormDataExists(request.FormData, request);
+                return request.FormData.ToMultipartFormContent();
             // case MimeType.Text:
             default:
                 return new StringContent(request.BodyObject?.ToString() ?? "");
@@ -48,7 +60,7 @@ public static class ApiRequestExtensions
     public static HttpRequestMessage BuildRequest(this ApiRequest request)
     {
         var path = request.BuildPath();
-        var query = request.Query?.GenerateQuery() ?? "";
+        var query = request.Query?.GenerateString() ?? "";
         var body = request.CreateBodyContent();
 
         if (request.BaseUrl == null)

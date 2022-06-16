@@ -12,7 +12,7 @@ public class QueryParamsCollectionTests
         var queries = new QueryParamsCollection();
         queries.Add("mypar", "myvalue");
 
-        var query = queries.GenerateQuery();
+        var query = queries.GenerateString();
         
         Assert.Equal("?mypar=myvalue", query);
     }
@@ -22,7 +22,7 @@ public class QueryParamsCollectionTests
     {
         var queries = new QueryParamsCollection();
 
-        Assert.Throws<FormatException>(() =>
+        Assert.Throws<ArgumentException>(() =>
         {
             queries.Add("", "value");
         });
@@ -55,7 +55,7 @@ public class QueryParamsCollectionTests
         queries.Add("myKey", "value2");
         queries.Add("myKey", "value3");
 
-        var query = queries.GenerateQuery();
+        var query = queries.GenerateString();
         
         Assert.Equal("?myKey[]=value1&myKey[]=value2&myKey[]=value3", query);
     }
@@ -69,8 +69,19 @@ public class QueryParamsCollectionTests
         queries.Add("myKey2", "value");
         queries.Add("myKey3", "value");
 
-        var query = queries.GenerateQuery();
+        var query = queries.GenerateString();
         
         Assert.Equal("?myKey1=value&myKey2=value&myKey3=value", query);
+    }
+
+    [Fact]
+    public void Throws_If_Argument_Is_Null()
+    {
+        var queries = new QueryParamsCollection();
+
+        Assert.Throws<ArgumentException>(() =>
+        {
+            queries.Add<string>("test", null);
+        });
     }
 }
