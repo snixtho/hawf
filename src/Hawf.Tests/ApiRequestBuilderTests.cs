@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
+using System.Numerics;
 using System.Threading;
 using Hawf.Client.Http;
 using Hawf.Tests.Models;
@@ -259,5 +260,35 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
         WithXmlBody(bodyObj);
         
         Assert.Equal(bodyObj, RequestInfo.BodyObject);
+    }
+
+    [Fact]
+    public void FormData_Added()
+    {
+        BuilderRequestFinished();
+        
+        WithFormParam("MyKey", "My Value");
+
+        Assert.Equal(MimeType.FormUrlEncoded, RequestInfo.ContentType);
+        Assert.Contains("MyKey", (IDictionary<string, List<object>>) RequestInfo.FormData);
+
+        var value = RequestInfo.FormData["MyKey"];
+
+        Assert.Contains("My Value", value);
+    }
+    
+    [Fact]
+    public void MultipartFormData_Added()
+    {
+        BuilderRequestFinished();
+
+        WithMultipartFormData("MyKey", new byte[] {1, 2, 3});
+
+        Assert.Equal(MimeType.MultipartForm, RequestInfo.ContentType);
+        Assert.Contains("MyKey", (IDictionary<string, List<object>>) RequestInfo.FormData);
+
+        var value = RequestInfo.FormData["MyKey"];
+
+        Assert.Contains(new byte[] {1, 2, 3}, value);
     }
 }
