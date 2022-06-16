@@ -27,6 +27,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         RequestInfo.Headers = new Dictionary<string, string>();
         RequestInfo.PathValues = new List<object>();
         RequestInfo.Query = new QueryParamsCollection();
+        RequestInfo.FormData = new FormDataCollection();
         
         _isBuildingRequest = true;
         
@@ -82,6 +83,44 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         
         RequestInfo.Query.Add(name, value);
         
+        return (T) this;
+    }
+
+    /// <summary>
+    /// Add a form data key/value pair and set the content type
+    /// to x-www-form-urlencoded.
+    /// </summary>
+    /// <param name="key">Name of the parameter.</param>
+    /// <param name="content">Value of the parameter that can be serialized to a string.</param>
+    /// <returns></returns>
+    protected T WithFormParam(string key, object? content)
+    {
+        if (content == null)
+            // ignore null values
+            return (T) this;
+        
+        WithContentType(MimeType.FormUrlEncoded);
+        RequestInfo.FormData.Add(key, content);
+
+        return (T) this;
+    }
+
+    /// <summary>
+    /// Add a form data key/value pair anset content type
+    /// to form-data.
+    /// </summary>
+    /// <param name="key">Name of the value</param>
+    /// <param name="content">Content of the value</param>
+    /// <returns></returns>
+    protected T WithMultipartFormData(string key, object? content)
+    {
+        if (content == null)
+            // ignore null values
+            return (T) this;
+        
+        WithContentType(MimeType.MultipartForm);
+        RequestInfo.FormData.Add(key, content);
+
         return (T) this;
     }
 
@@ -309,6 +348,12 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         return (T) this;
     }
 
+    /// <summary>
+    /// Add an object to be generated as XML in the request.
+    /// </summary>
+    /// <param name="bodyContent">Object to serialize to XML</param>
+    /// <typeparam name="TBody"></typeparam>
+    /// <returns></returns>
     protected T WithXmlBody<TBody>(TBody bodyContent)
     {
         EnsureNewRequest();

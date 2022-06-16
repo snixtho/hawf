@@ -53,7 +53,7 @@ public class RequestGeneratorTests
             }
         };
 
-        var query = request.Query.GenerateQuery();
+        var query = request.Query.GenerateString();
         
         Assert.Equal("?myParam1=myValue1&myParam2=123", query);
     }
@@ -69,7 +69,7 @@ public class RequestGeneratorTests
             }
         };
         
-        var query = request.Query.GenerateQuery();
+        var query = request.Query.GenerateString();
         
         Assert.Equal("?myParam1=my+value", query);
     }
@@ -110,6 +110,40 @@ public class RequestGeneratorTests
         var value = await stringBody?.ReadAsStringAsync()!;
         
         Assert.Equal("{\"myKey\":\"MyValue\"}", value);
+    }
+
+    [Fact]
+    public async Task Content_Body_FormData_UrlEncoded_Content_Generated_Correctly()
+    {
+        var request = new ApiRequest
+        {
+            FormData = new FormDataCollection()
+            {
+                {"TestKey", new List<object>() {"Test String"}}
+            },
+            ContentType = MimeType.FormUrlEncoded
+        };
+
+        var body = request.CreateBodyContent();
+        
+        Assert.IsType<FormUrlEncodedContent>(body);
+    }
+    
+    [Fact]
+    public async Task Content_Body_FormData_Multipart_Content_Generated_Correctly()
+    {
+        var request = new ApiRequest
+        {
+            FormData = new FormDataCollection()
+            {
+                {"TestKey", new List<object>() {"Test String"}}
+            },
+            ContentType = MimeType.MultipartForm
+        };
+
+        var body = request.CreateBodyContent();
+
+        Assert.IsType<MultipartFormDataContent>(body);
     }
 
     [Fact]
