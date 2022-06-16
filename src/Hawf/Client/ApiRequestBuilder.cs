@@ -310,6 +310,12 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         return (T) this;
     }
 
+    /// <summary>
+    /// Add an object to be generated as XML in the request.
+    /// </summary>
+    /// <param name="bodyContent">Object to serialize to XML</param>
+    /// <typeparam name="TBody"></typeparam>
+    /// <returns></returns>
     protected T WithXmlBody<TBody>(TBody bodyContent)
     {
         EnsureNewRequest();
