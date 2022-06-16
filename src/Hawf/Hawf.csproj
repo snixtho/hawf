@@ -9,7 +9,7 @@
         <PackageProjectUrl>https://github.com/snixtho/hawf</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/snixtho/hawf/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/snixtho/hawf</RepositoryUrl>
-        <PackageTags>api,http,client,framwwork,library</PackageTags>
+        <PackageTags>api,http,client,framework,library</PackageTags>
     </PropertyGroup>
 
 </Project>
