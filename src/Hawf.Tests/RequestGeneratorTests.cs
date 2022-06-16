@@ -113,6 +113,40 @@ public class RequestGeneratorTests
     }
 
     [Fact]
+    public async Task Content_Body_FormData_UrlEncoded_Content_Generated_Correctly()
+    {
+        var request = new ApiRequest
+        {
+            FormData = new FormDataCollection()
+            {
+                {"TestKey", new List<object>() {"Test String"}}
+            },
+            ContentType = MimeType.FormUrlEncoded
+        };
+
+        var body = request.CreateBodyContent();
+        
+        Assert.IsType<FormUrlEncodedContent>(body);
+    }
+    
+    [Fact]
+    public async Task Content_Body_FormData_Multipart_Content_Generated_Correctly()
+    {
+        var request = new ApiRequest
+        {
+            FormData = new FormDataCollection()
+            {
+                {"TestKey", new List<object>() {"Test String"}}
+            },
+            ContentType = MimeType.MultipartForm
+        };
+
+        var body = request.CreateBodyContent();
+
+        Assert.IsType<MultipartFormDataContent>(body);
+    }
+
+    [Fact]
     public void BuildRequest_Throws_On_Null_BaseAddress()
     {
         var request = new ApiRequest
