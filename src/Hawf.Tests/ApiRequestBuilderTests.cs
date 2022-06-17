@@ -160,6 +160,17 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     }
 
     [Fact]
+    public void Integer_Array_Query_Param_Added()
+    {
+        BuilderRequestFinished();
+        WithQueryOptions(new TestObjQueryOptions {MyIntArray = new int[] {1, 2, 3}});
+
+        var value = RequestInfo.Query["myIntArray"][0];
+
+        Assert.Equal("1,2,3", value);
+    }
+
+    [Fact]
     public void Method_Correctly_Set()
     {
         BuilderRequestFinished();

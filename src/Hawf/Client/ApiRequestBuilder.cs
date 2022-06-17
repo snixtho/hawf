@@ -219,7 +219,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
                 value = Convert.ToInt32(objValue);
             else if (typeof(string) != property.PropertyType && typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
             {
-                var objArr = (object[]) objValue;
+                var objArr = ((IEnumerable)objValue).Cast<object>();
                 var objStrMapped = objArr.Select(e => e.ToString());
                 value = string.Join(propertyOptions.ListSeparator, objStrMapped);
             }
