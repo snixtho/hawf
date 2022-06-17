@@ -16,4 +16,5 @@ public class TestObjQueryOptions
     public int MyIntOption { get; set; }
     [QueryProperty(IntegerEnum = true)]
     public TestEnumQueryOption MyEnum { get; set; }
+    public int[] MyIntArray { get; set; }
 }
