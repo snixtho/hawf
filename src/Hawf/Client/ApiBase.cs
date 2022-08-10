@@ -26,7 +26,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     {
         // client config
         var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
-        var attrInfo = attr ?? throw new Exception("The API must annotate the ApiClient attribute");
+        var attrInfo = attr ?? throw new CustomAttributeFormatException("The API must annotate the ApiClient attribute");
 
         _clientConfig = attrInfo.ClientConfig;
 
@@ -115,7 +115,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
                 await _cache.Set(cacheKey, response, request.CacheTime ?? _clientConfig.DefaultCacheTime);
 
             if (_clientConfig.DefaultThrowOnFail && !response.IsSuccessStatusCode)
-                throw new Exception($"Request failed with response: {response.StatusCode}");
+                throw new HawfResponseException(response);
             
             return response;
         }
