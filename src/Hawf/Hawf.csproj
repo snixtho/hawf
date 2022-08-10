@@ -10,6 +10,12 @@
         <PackageLicenseUrl>https://github.com/snixtho/hawf/blob/master/LICENSE</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/snixtho/hawf</RepositoryUrl>
         <PackageTags>api,http,client,framework,library</PackageTags>
+        <Authors>snixtho</Authors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    
 </Project>

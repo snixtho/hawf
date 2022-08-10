@@ -307,6 +307,19 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
         return (T) this;
     }
 
+    /// <summary>
+    /// Add authorization using a specific scheme.
+    /// </summary>
+    /// <param name="scheme">Name of the scheme.</param>
+    /// <param name="token">Credentials/access token</param>
+    /// <returns></returns>
+    protected T WithAuthorization(string scheme, string token)
+    {
+        WithHeader(HttpHeader.Authorization, $"{scheme} {token}");
+
+        return (T) this;
+    }
+
     protected T WithContentType(string mimeType)
     {
         EnsureNewRequest();

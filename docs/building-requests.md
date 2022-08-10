@@ -59,6 +59,12 @@ HTTP basic auth is supported out of the box with `WithBasicAuth`. It will automa
 WithBasicAuth("username", "password")
 ```
 
+### Custom Authorization schemes
+You can set the authorization header with a custom scheme using the base `WithAuthorization` method:
+```cs
+WithAuthorization("MyScheme", "MyToken")
+```
+
 ## Setting Request Body
 The builder provides method for manipulating the body of the request.
 

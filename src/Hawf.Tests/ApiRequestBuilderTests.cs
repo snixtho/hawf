@@ -222,6 +222,17 @@ public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
     }
 
     [Fact]
+    public void Authorization_Set()
+    {
+        BuilderRequestFinished();
+        WithAuthorization("MyScheme", "MyToken");
+
+        var token = RequestInfo.Headers[HttpHeader.Authorization];
+        
+        Assert.Equal("MyScheme MyToken", token);
+    }
+
+    [Fact]
     public void Json_Body_Added()
     {
         BuilderRequestFinished();
