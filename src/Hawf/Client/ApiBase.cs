@@ -17,7 +17,7 @@ namespace Hawf.Client;
 public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 {
     private readonly ApiClientConfiguration _clientConfig;
-    private readonly HttpClient _client;
+    private HttpClient _client;
     private int _requestCounter;
     private DateTime _requestCounterReset;
     private readonly ApiMemoryCache _cache;
@@ -30,7 +30,6 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 
         _clientConfig = attrInfo.ClientConfig;
 
-        _client = new HttpClient(_clientConfig.HttpHandler);
         _cache = new ApiMemoryCache();
         _requestCounter = -1;
     }
@@ -77,6 +76,8 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     {
         try
         {
+            _client = new HttpClient(_clientConfig.HttpHandler);
+            
             // build request
             if (!request.Headers.ContainsKey(HttpHeader.UserAgent))
                 WithUserAgent(_clientConfig.DefaultUserAgent);
