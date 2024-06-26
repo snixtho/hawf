@@ -7,10 +7,17 @@ public class FormDataCollection : QueryParamsCollection
 
     public IEnumerable<KeyValuePair<string, string>> ToUrlEncodedCollection()
     {
-        return this.Select(e =>
+        var keyPairs = new List<KeyValuePair<string, string>>();
+
+        foreach (var param in this)
         {
-            return new KeyValuePair<string, string>(e.Key, e.Value?.ToString() ?? "null");
-        });
+            foreach (var value in param.Value)
+            {
+                keyPairs.Add(new KeyValuePair<string, string>(param.Key, value?.ToString() ?? ""));
+            }
+        }
+
+        return keyPairs;
     }
 
     public MultipartFormDataContent ToMultipartFormContent()
