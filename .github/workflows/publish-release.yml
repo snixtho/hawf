@@ -37,7 +37,7 @@ jobs:
             dest: package.zip
         
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: package
           path: ${{ github.workspace }}/package.zip
