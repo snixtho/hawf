@@ -1,4 +1,6 @@
-﻿namespace Hawf.Client.Configuration;
+﻿using System.Text.Json;
+
+namespace Hawf.Client.Configuration;
 
 public class ApiClientConfiguration
 {
@@ -48,4 +50,12 @@ public class ApiClientConfiguration
     /// The HTTP message handler to use in requests.
     /// </summary>
     public HttpMessageHandler HttpHandler { get; set; } = new HttpClientHandler();
+
+    /// <summary>
+    /// Options to pass to the JSON serializer.
+    /// </summary>
+    public JsonSerializerOptions SerializerOptions { get; set; } = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
 }

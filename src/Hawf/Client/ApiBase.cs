@@ -160,10 +160,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         var responseText = await response.Content.ReadAsStringAsync(cancelToken);
-        return JsonSerializer.Deserialize<TReturn>(responseText, new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        });
+        return JsonSerializer.Deserialize<TReturn>(responseText, _clientConfig.SerializerOptions);
     }
 
     /// <summary>
