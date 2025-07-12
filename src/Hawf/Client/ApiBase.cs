@@ -24,15 +24,15 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     public ApiBase() : base(new ApiClientConfiguration<T>())
     {
         // client config
-        var attr = GetType().GetCustomAttribute<ApiClientAttribute<T>>();
+        var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
         var attrInfo = attr ?? throw new CustomAttributeFormatException("The API must annotate the ApiClient attribute");
 
-        ClientConfig.BaseUrl = attrInfo.ClientConfig.BaseUrl;
-        ClientConfig.DefaultUserAgent = attrInfo.ClientConfig.DefaultUserAgent;
-        ClientConfig.RateLimitMaxRequests = attrInfo.ClientConfig.RateLimitMaxRequests;
-        ClientConfig.RateLimitTimespan = attrInfo.ClientConfig.RateLimitTimespan;
-        ClientConfig.UseRateLimit = attrInfo.ClientConfig.UseRateLimit;
-        ClientConfig.DefaultThrowOnFail = attrInfo.ClientConfig.DefaultThrowOnFail;
+        ClientConfig.BaseUrl = attrInfo.BaseUrl;
+        ClientConfig.DefaultUserAgent = attrInfo.DefaultUserAgent;
+        ClientConfig.RateLimitMaxRequests = attrInfo.RateLimitMaxRequests;
+        ClientConfig.RateLimitTimespan = attrInfo.RateLimitTimespan;
+        ClientConfig.UseRateLimit = attrInfo.UseRateLimit;
+        ClientConfig.DefaultThrowOnFail = attrInfo.DefaultThrowOnFail;
 
         _cache = new ApiMemoryCache();
         _requestCounter = -1;

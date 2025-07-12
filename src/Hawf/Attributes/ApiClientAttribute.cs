@@ -4,9 +4,14 @@ using Hawf.Client.Configuration;
 namespace Hawf.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ApiClientAttribute<TApi> : Attribute where TApi : ApiRequestBuilder<TApi>
+public class ApiClientAttribute : Attribute
 {
-    public ApiClientConfiguration<TApi> ClientConfig { get; }
+    public string BaseUrl { get; }
+    public string DefaultUserAgent { get; }
+    public int RateLimitMaxRequests { get; }
+    public TimeSpan RateLimitTimespan { get; }
+    public bool UseRateLimit { get; }
+    public bool DefaultThrowOnFail { get; }
 
     public ApiClientAttribute(
         string baseUrl="", 
@@ -17,14 +22,11 @@ public class ApiClientAttribute<TApi> : Attribute where TApi : ApiRequestBuilder
         bool throwOnFail=true
         )
     {
-        ClientConfig = new ApiClientConfiguration<TApi>
-        {
-            BaseUrl = baseUrl,
-            DefaultUserAgent = userAgent,
-            RateLimitMaxRequests = rateLimitMaxRequests,
-            RateLimitTimespan = TimeSpan.FromMilliseconds(rateLimitTimespan),
-            UseRateLimit = useRateLimit,
-            DefaultThrowOnFail = throwOnFail
-        };
+        BaseUrl = baseUrl;
+        DefaultUserAgent = userAgent;
+        RateLimitMaxRequests = rateLimitMaxRequests;
+        RateLimitTimespan = TimeSpan.FromMilliseconds(rateLimitTimespan);
+        UseRateLimit = useRateLimit;
+        DefaultThrowOnFail = throwOnFail;
     }
 }

@@ -4,7 +4,7 @@ using Hawf.Client;
 
 namespace GettingStartedTutorial;
 
-[ApiClient<GithubApi>("https://api.github.com")]
+[ApiClient("https://api.github.com")]
 public class GithubApi : ApiBase<GithubApi>
 {
     /// <summary>
