@@ -6,6 +6,16 @@ namespace Hawf.Client.Http;
 
 public class QueryParamsCollection : HttpKeyValueCollection
 {
+    public QueryParamsCollection() {}
+
+    public QueryParamsCollection(QueryParamsCollection other)
+    {
+        foreach (var kv in other)
+        {
+            Add(kv.Key, [..kv.Value]);
+        }
+    }
+    
     public override string GenerateString()
     {
         var query = "";

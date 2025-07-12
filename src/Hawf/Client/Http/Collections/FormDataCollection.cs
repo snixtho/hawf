@@ -2,6 +2,16 @@
 
 public class FormDataCollection : QueryParamsCollection
 {
+    public FormDataCollection() {}
+
+    public FormDataCollection(FormDataCollection other)
+    {
+        foreach (var kv in other)
+        {
+            Add(kv.Key, [..kv.Value]);
+        }
+    }
+    
     public override string GenerateString() =>
         base.GenerateString().Substring(1);
 

@@ -14,25 +14,58 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     protected ApiRequest RequestInfo { get; private set; }
     private bool _isBuildingRequest;
 
+    internal ApiRequestBuilder(){}
+    
     /// <summary>
     /// Begin a new request if one isn't currently being built already.
     /// </summary>
     /// <returns></returns>
-    protected T EnsureNewRequest()
+    protected T EnsureNewRequest(ApiRequest? baseRequest)
     {
         if (_isBuildingRequest) return (T) this;
-        
-        RequestInfo = new ApiRequest();
 
-        RequestInfo.Headers = new Dictionary<string, string>();
-        RequestInfo.PathValues = new List<object>();
-        RequestInfo.Query = new QueryParamsCollection();
-        RequestInfo.FormData = new FormDataCollection();
-        
+        if (baseRequest != null)
+        {
+            RequestInfo = new ApiRequest
+            {
+                Headers = new Dictionary<string, string>(baseRequest.Headers),
+                PathValues =
+                [
+                    ..baseRequest.PathValues
+                ],
+                Path = baseRequest.Path,
+                Method = baseRequest.Method,
+                BaseUrl = baseRequest.BaseUrl,
+                KeepAlive = baseRequest.KeepAlive,
+                CacheResponse = baseRequest.CacheResponse,
+                CacheTime = baseRequest.CacheTime,
+                BodyObject = baseRequest.BodyObject,
+                ContentType = baseRequest.ContentType,
+                Query = new QueryParamsCollection(baseRequest.Query),
+                FormData = new FormDataCollection(baseRequest.FormData),
+            };
+        }
+        else
+        {
+            RequestInfo = new ApiRequest
+            {
+                Headers = new Dictionary<string, string>(),
+                PathValues = [..baseRequest?.PathValues ?? []],
+                Query = new QueryParamsCollection(),
+                FormData = new FormDataCollection(),
+            };
+        }
+
         _isBuildingRequest = true;
         
         return (T) this;
     }
+    
+    /// <summary>
+    /// Begin a new request if one isn't currently being built already.
+    /// </summary>
+    /// <returns></returns>
+    protected T EnsureNewRequest() => EnsureNewRequest(null);
 
     /// <summary>
     /// Mark current request as finished. Should be called after

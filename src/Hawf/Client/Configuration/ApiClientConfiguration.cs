@@ -2,7 +2,7 @@
 
 namespace Hawf.Client.Configuration;
 
-public class ApiClientConfiguration
+public class ApiClientConfiguration<T> where T : ApiRequestBuilder<T>
 {
     /// <summary>
     /// Baseurl all endpoints will be called from.
@@ -58,4 +58,8 @@ public class ApiClientConfiguration
     {
         PropertyNameCaseInsensitive = true
     };
+    /// <summary>
+    /// Initial configuration of all requests.
+    /// </summary>
+    public ApiRequestBuilder<T>? BaseRequest { get; set; }
 }
