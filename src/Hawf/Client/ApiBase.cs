@@ -16,19 +16,23 @@ namespace Hawf.Client;
 
 public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 {
-    private readonly ApiClientConfiguration _clientConfig;
     private HttpClient _client;
     private int _requestCounter;
     private DateTime _requestCounterReset;
     private readonly ApiMemoryCache _cache;
 
-    public ApiBase()
+    public ApiBase() : base(new ApiClientConfiguration<T>())
     {
         // client config
-        var attr = GetType().GetCustomAttribute<ApiClientAttribute>();
+        var attr = GetType().GetCustomAttribute<ApiClientAttribute<T>>();
         var attrInfo = attr ?? throw new CustomAttributeFormatException("The API must annotate the ApiClient attribute");
 
-        _clientConfig = attrInfo.ClientConfig;
+        ClientConfig.BaseUrl = attrInfo.ClientConfig.BaseUrl;
+        ClientConfig.DefaultUserAgent = attrInfo.ClientConfig.DefaultUserAgent;
+        ClientConfig.RateLimitMaxRequests = attrInfo.ClientConfig.RateLimitMaxRequests;
+        ClientConfig.RateLimitTimespan = attrInfo.ClientConfig.RateLimitTimespan;
+        ClientConfig.UseRateLimit = attrInfo.ClientConfig.UseRateLimit;
+        ClientConfig.DefaultThrowOnFail = attrInfo.ClientConfig.DefaultThrowOnFail;
 
         _cache = new ApiMemoryCache();
         _requestCounter = -1;
@@ -36,7 +40,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 
     private async Task TryPreventRateLimit(CancellationToken cancelToken)
     {
-        if (_clientConfig.UseRateLimit)
+        if (ClientConfig.UseRateLimit)
         {
             if (_requestCounter < 0)
             {
@@ -45,14 +49,14 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
                 _requestCounterReset = DateTime.Now;
             }
 
-            if (_requestCounter >= _clientConfig.RateLimitMaxRequests)
+            if (_requestCounter >= ClientConfig.RateLimitMaxRequests)
             {
                 var epoch = DateTime.Now - _requestCounterReset;
 
-                if (epoch <= _clientConfig.RateLimitTimespan)
+                if (epoch <= ClientConfig.RateLimitTimespan)
                 {
-                    var timeLeft = _clientConfig.RateLimitTimespan - epoch;
-                    if (_clientConfig.WaitForRateLimit)
+                    var timeLeft = ClientConfig.RateLimitTimespan - epoch;
+                    if (ClientConfig.WaitForRateLimit)
                         await Task.Delay(timeLeft.Milliseconds, cancelToken);
                     else
                         throw new RateLimitExceededException(timeLeft);
@@ -76,14 +80,14 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     {
         try
         {
-            _client = new HttpClient(_clientConfig.HttpHandler);
+            _client = new HttpClient(ClientConfig.HttpHandler);
             
             // build request
             if (!request.Headers.ContainsKey(HttpHeader.UserAgent))
-                WithUserAgent(_clientConfig.DefaultUserAgent);
+                WithUserAgent(ClientConfig.DefaultUserAgent);
 
             if (request.BaseUrl == null)
-                WithBaseUrl(_clientConfig.BaseUrl);
+                WithBaseUrl(ClientConfig.BaseUrl);
 
             var httpRequest = request.BuildRequest();
             
@@ -92,7 +96,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
                 throw new InvalidOperationException("The absolute URI for the request is null, did you set a base address?");
             
             var cacheKey = httpRequest.RequestUri.AbsoluteUri;
-            var cacheResponse = request.CacheResponse || _clientConfig.CacheResponse;
+            var cacheResponse = request.CacheResponse || ClientConfig.CacheResponse;
             if (cacheResponse)
             {
                 HttpResponseMessage? cachedResponse = null;
@@ -112,16 +116,16 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
 
             // cache the response if enabled
             if (cacheResponse)
-                await _cache.Set(cacheKey, response, request.CacheTime ?? _clientConfig.DefaultCacheTime);
+                await _cache.Set(cacheKey, response, request.CacheTime ?? ClientConfig.DefaultCacheTime);
 
-            if (_clientConfig.DefaultThrowOnFail && !response.IsSuccessStatusCode)
+            if (ClientConfig.DefaultThrowOnFail && !response.IsSuccessStatusCode)
                 throw new HawfResponseException(response);
             
             return response;
         }
         catch (Exception ex)
         {
-            if (_clientConfig.DefaultThrowOnFail)
+            if (ClientConfig.DefaultThrowOnFail)
                 throw;
         }
         finally
@@ -137,7 +141,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     /// Edit the API client's configuration.
     /// </summary>
     /// <param name="configAction"></param>
-    public void Configure(Action<ApiClientConfiguration> configAction) => configAction.Invoke(_clientConfig);
+    public void Configure(Action<ApiClientConfiguration<T>> configAction) => configAction.Invoke(ClientConfig);
     
     #region Request Methods
 
@@ -160,7 +164,7 @@ public class ApiBase<T> : ApiRequestBuilder<T> where T : ApiBase<T>
     {
         var response = await SendRequestAsync(RequestInfo, cancelToken);
         var responseText = await response.Content.ReadAsStringAsync(cancelToken);
-        return JsonSerializer.Deserialize<TReturn>(responseText, _clientConfig.SerializerOptions);
+        return JsonSerializer.Deserialize<TReturn>(responseText, ClientConfig.SerializerOptions);
     }
 
     /// <summary>

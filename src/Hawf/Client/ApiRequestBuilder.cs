@@ -5,16 +5,17 @@ using System.Reflection;
 using System.Text;
 using Hawf.Attributes;
 using Hawf.Client;
+using Hawf.Client.Configuration;
 using Hawf.Client.Http;
 
 namespace Hawf;
 
-public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
+public class ApiRequestBuilder<T>(ApiClientConfiguration<T> clientConfig) where T : ApiRequestBuilder<T>
 {
     protected ApiRequest RequestInfo { get; private set; }
     private bool _isBuildingRequest;
 
-    internal ApiRequestBuilder(){}
+    public ApiClientConfiguration<T> ClientConfig => clientConfig;
     
     /// <summary>
     /// Begin a new request if one isn't currently being built already.
@@ -84,7 +85,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T WithHeader(string name, string? value)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         if (value == null)
             return (T) this;
@@ -109,7 +110,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T WithQueryParam<TValue>(string name, TValue? value)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         if (value == null)
             return (T) this;
@@ -177,7 +178,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T WithPathValues(params object[] values)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
         RequestInfo.PathValues.AddRange(values);
         return (T) this;
     }
@@ -287,7 +288,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T CacheResponseFor(TimeSpan timeSpan)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         if (timeSpan == TimeSpan.Zero)
         {
@@ -355,7 +356,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
 
     protected T WithContentType(string mimeType)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         RequestInfo.ContentType = mimeType;
 
@@ -371,7 +372,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T WithJsonBody<TBody>(TBody bodyContent)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         RequestInfo.BodyObject = bodyContent;
         WithContentType(MimeType.Json);
@@ -386,7 +387,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T WithStringBody(string bodyContent)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         RequestInfo.BodyObject = bodyContent;
         WithContentType(MimeType.Text);
@@ -402,7 +403,7 @@ public class ApiRequestBuilder<T> where T : ApiRequestBuilder<T>
     /// <returns></returns>
     protected T WithXmlBody<TBody>(TBody bodyContent)
     {
-        EnsureNewRequest();
+        EnsureNewRequest(clientConfig.BaseRequest?.RequestInfo);
 
         RequestInfo.BodyObject = bodyContent;
         WithContentType(MimeType.Xml);

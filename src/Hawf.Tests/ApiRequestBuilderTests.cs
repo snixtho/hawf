@@ -4,13 +4,14 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Numerics;
 using System.Threading;
+using Hawf.Client.Configuration;
 using Hawf.Client.Http;
 using Hawf.Tests.Models;
 using Xunit;
 
 namespace Hawf.Tests;
 
-public class ApiRequestBuilderTests : ApiRequestBuilder<ApiRequestBuilderTests>
+public class ApiRequestBuilderTests() : ApiRequestBuilder<ApiRequestBuilderTests>(new ApiClientConfiguration<ApiRequestBuilderTests>())
 {
     [Fact]
     public void Test_Initial_Setup()

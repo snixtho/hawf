@@ -4,9 +4,9 @@ using Hawf.Client.Configuration;
 namespace Hawf.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ApiClientAttribute : Attribute
+public class ApiClientAttribute<TApi> : Attribute where TApi : ApiRequestBuilder<TApi>
 {
-    public ApiClientConfiguration ClientConfig { get; }
+    public ApiClientConfiguration<TApi> ClientConfig { get; }
 
     public ApiClientAttribute(
         string baseUrl="", 
@@ -17,7 +17,7 @@ public class ApiClientAttribute : Attribute
         bool throwOnFail=true
         )
     {
-        ClientConfig = new ApiClientConfiguration
+        ClientConfig = new ApiClientConfiguration<TApi>
         {
             BaseUrl = baseUrl,
             DefaultUserAgent = userAgent,
